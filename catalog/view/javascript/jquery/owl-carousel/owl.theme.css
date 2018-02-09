@@ -1,0 +1,110 @@
+/*
+* 	Owl Carousel Owl Demo Theme
+*	v1.3.3
+*/
+
+/* Pagination */
+.owl-pagination {
+	top: 0;
+	margin-top: -40px;
+	padding: 10px 0;
+}
+.owl-controls .owl-page span {
+	display: block;
+	width: 12px;
+	height: 12px;
+	background: #919191;
+	border-radius: 50px;
+}
+.owl-controls .owl-page.active span {
+	background: #2F2F2F;
+}
+
+/* Slider description blocks */
+
+.text-slider-one {
+	position: absolute;
+	color: #FFFFFF;
+	font-size: 20px;
+	left: 6%;
+	top: 40px;
+	padding: 20px;
+	background: rgba(214, 54, 54, 0.71) none repeat scroll 0 0;
+	border-radius: 5px;
+	width: 250px;
+}
+.text-slider-two {
+	position: absolute;
+	color: #FFFFFF;
+	font-size: 20px;
+	left: 6%;
+	top: 122px;
+	padding: 20px;
+	background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;
+	border-radius: 5px;
+	width: 250px;
+}
+.text-slider-three {
+	position: absolute;
+	color: #FFFFFF;
+	font-size: 20px;
+	left: 6%;
+	top: 204px;
+	padding: 20px;
+	background: rgba(214, 54, 54, 0.5) none repeat scroll 0 0;
+	border-radius: 5px;
+	width: 250px;
+}
+.text-slider-four {
+	position: absolute;
+	color: #FFFFFF;
+	font-size: 20px;
+	left: 6%;
+	top: 286px;
+	padding: 20px;
+	background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;
+	border-radius: 5px;
+	width: 250px;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+	.text-slider-one {
+		top: 20px;
+	}
+	.text-slider-two {
+		top: 102px;
+	}
+	.text-slider-three {
+		top: 184px;
+	}
+	.text-slider-four {
+		top: 266px;
+	}
+}
+.ef-slider-one {
+	-webkit-animation: 2000ms linear 300ms both bounceInLeft;
+	-moz-animation: 2000ms linear 300ms both bounceInLeft;
+	-o-animation: 2000ms linear 300ms both bounceInLeft;
+	-ms-animation: 2000ms linear 300ms both bounceInLeft;
+	animation: 2000ms linear 300ms both bounceInLeft;
+}
+.ef-slider-two {
+	-webkit-animation: 500ms linear 500ms both fadeInUp;
+	-moz-animation: 500ms linear 500ms both fadeInUp;
+	-o-animation: 500ms linear 500ms both fadeInUp;
+	-ms-animation: 500ms linear 500ms both fadeInUp;
+	animation: 500ms linear 500ms both fadeInUp;
+}
+.ef-slider-three {
+	-webkit-animation: 2000ms linear 1200ms both bounceInLeft;
+	-moz-animation: 2000ms linear 1200ms both bounceInLeft;
+	-o-animation: 2000ms linear 1200ms both bounceInLeft;
+	-ms-animation: 2000ms linear 1200ms both bounceInLeft;
+	animation: 2000ms linear 1200ms both bounceInLeft;
+}
+.ef-slider-four {
+	-webkit-animation: 500ms linear 2600ms both fadeInUp;
+	-moz-animation: 500ms linear 2200ms both fadeInUp;
+	-o-animation: 500ms linear 2600ms both fadeInUp;
+	-ms-animation: 500ms linear 2600ms both fadeInUp;
+	animation: 500ms linear 2600ms both fadeInUp;
+}
