@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>[Mod] SEO URL-short</name>
+    <code>url_short</code>
+    <version>1.1</version>
+    <author>by DiMoss</author>
+    <link>http://forum.opencart-russia.ru/members/dimoss.3919/</link>
+
+    <!-- 1. CATEGORY MODEL (Frontend) -->
+
+    <file path="catalog/model/catalog/category.php">
+        <operation>
+            <search><![CDATA[
+	public function getCategoryFilters($category_id) {
+            ]]></search>
+            <add position="before"><![CDATA[
+    //SEO URL-short mod
+    public function getFullBreadcrumbPath($category_id) {
+        $query = $this->db->query("SELECT path_id FROM " . DB_PREFIX . "category_path WHERE category_id = '" . (int)$category_id . "' ORDER by level ASC");
+
+        return $query->rows;
+    }
+    //SEO URL-short mod
+            ]]></add>
+        </operation>
+    </file>
+
+    <!--  1. SEO-URL CONTROLLER (Frontend) -->
+
+    <file path="catalog/controller/startup/seo_url.php">
+        <operation>
+            <search><![CDATA[
+            $url .= '/' . $query->row['keyword'];
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            $url = '/' . $query->row['keyword']; //SEO URL-short mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0"><![CDATA[
+			if (isset($this->request->get['page'])) $arg = $arg . '?page=' . (int)$this->request->get['page'];
+            ]]></search>
+            <add position="after"><![CDATA[
+                //SEO-Url
+				if (isset($this->request->get['min_price']) && isset($this->request->get['max_price'])) {
+                    $arg = $arg . '?min_price=' . (int)$this->request->get['min_price'] . '&max_price=' . (int)$this->request->get['max_price'];
+                    if (isset($this->request->get['manufacturer_id'])) {
+				        $arg .= '&manufacturer_id=' . (int)$this->request->get['manufacturer_id'];
+				    }
+				    if (isset($this->request->get['attribute_filter'])) {
+                        foreach ($this->request->get['attribute_filter'] as $key => $attribute_value) {
+                            $arg .= '&attribute_filter[' . $key . ']=' . $attribute_value;
+                        }
+                    }
+				    if (isset($this->request->get['in_stock'])) {
+				        $arg .= '&in_stock=true';
+				    }
+			        if (isset($this->request->get['sort'])) {
+                        $arg .= '&sort=' . $this->request->get['sort'];
+                    }
+                    if (isset($this->request->get['order'])) {
+                        $arg .= '&order=' . $this->request->get['order'];
+                    }
+                    if (isset($this->request->get['limit'])) {
+                        $arg .= '&limit=' . $this->request->get['limit'];
+                    }
+				}
+				//SEO-Url
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="1"><![CDATA[
+			if (isset($this->request->get['page'])) $arg = $arg . '?page=' . (int)$this->request->get['page'];
+            ]]></search>
+            <add position="after"><![CDATA[
+                //SEO-Url
+				if (isset($this->request->get['min_price']) && isset($this->request->get['max_price'])) {
+                    $arg = $arg . '?min_price=' . (int)$this->request->get['min_price'] . '&max_price=' . (int)$this->request->get['max_price'];
+                    if (isset($this->request->get['attribute_filter'])) {
+                        foreach ($this->request->get['attribute_filter'] as $key => $attribute_value) {
+                            $arg .= '&attribute_filter[' . $key . ']=' . $attribute_value;
+                        }
+                    }
+                    if (isset($this->request->get['in_stock'])) {
+				        $arg .= '&in_stock=true';
+				    }
+				    if (isset($this->request->get['sort'])) {
+                        $arg .= '&sort=' . $this->request->get['sort'];
+                    }
+                    if (isset($this->request->get['order'])) {
+                        $arg .= '&order=' . $this->request->get['order'];
+                    }
+                    if (isset($this->request->get['limit'])) {
+                        $arg .= '&limit=' . $this->request->get['limit'];
+                    }
+				}
+				//SEO-Url
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((is_array($value) ? http_build_query($value) : (string)$value));
+            ]]></search>
+            <add position="replace"><![CDATA[
+                    //SEO-Url
+                    if ($key == 'attribute_filter') {
+                        foreach ($value as $filter_id => $filter_value) {
+                            $query .= '&' . rawurlencode((string)$key) . '[' . (int)$filter_id . ']=' . rawurlencode((string)$filter_value);
+                        }
+                    } else {
+                        $query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((is_array($value) ? http_build_query($value) : (string)$value));
+                    }
+                    //SEO-Url
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- 2. CATEGORY CONTROLLER (Frontend) -->
+
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[
+			$category_id = (int)array_pop($parts);
+            ]]></search>
+            <add position="replace" offset="-2"><![CDATA[
+            //SEO URL-short mod
+            $request_path = explode('_', (string)$this->request->get['path']);
+
+            $category_id = (int)array_pop($request_path);
+
+            $parts = array();
+
+            $full_path = $this->model_catalog_category->getFullBreadcrumbPath($category_id);
+
+            for ($i = 0; $i < count($full_path) - 1; $i++) {
+                $parts[] = $full_path[$i]['path_id'];
+            }
+            //SEO URL-short mod
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- 2. PRODUCT CONTROLLER (Frontend) -->
+
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search index="0"><![CDATA[
+			if (isset($this->request->get['path'])) {
+            ]]></search>
+            <add position="replace" offset="51"><![CDATA[
+        //Delete //SEO URL-short mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+		    if ($product_info) {
+            ]]></search>
+            <add position="after"><![CDATA[
+            //SEO URL-short mod
+		    $category_id_info = $this->model_catalog_parent_product->getParentCategoryId($product_id);
+
+		    if ($category_id_info) {
+		        $category_id = $category_id_info['category_id'];
+
+		        $parts = array();
+
+                $full_path = $this->model_catalog_category->getFullBreadcrumbPath($category_id);
+
+                for ($i = 0; $i < count($full_path); $i++) {
+                    $parts[] = $full_path[$i]['path_id'];
+                }
+
+                $path = '';
+
+                foreach ($parts as $path_id) {
+			    	if (!$path) {
+			    		$path = $path_id;
+			    	} else {
+			    		$path .= '_' . $path_id;
+			    	}
+
+			    	$category_info = $this->model_catalog_category->getCategory($path_id);
+
+			    	if ($category_info) {
+			    		$data['breadcrumbs'][] = array(
+			    			'text' => $category_info['name'],
+			    			'href' => $this->url->link('product/category', 'path=' . $path)
+			    		);
+			    	}
+			    }
+
+			    $category_info = $this->model_catalog_category->getCategory($category_id);
+		    }
+		    //SEO URL-short mod
+            ]]></add>
+        </operation>
+    </file>
+</modification>

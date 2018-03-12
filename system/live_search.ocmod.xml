@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>AJAX live search</name>
+    <code>ajax-live-search</code>
+    <version>2.1.3</version>
+    <author>Denise (rei7092@gmail.com)</author>
+    <link>http://demo.j-mall.com.tw/</link>
+
+    <file path="catalog/controller/common/search.php">
+        <operation>
+            <search>
+               <![CDATA[$this->load->language('common/search');]]>
+            </search>
+            <add position="before"><![CDATA[
+        $this->load->language('product/search');
+
+        $data['text_view_all_results'] = $this->language->get('text_view_all_results');
+        $data['text_empty'] = $this->language->get('text_empty');
+
+        $data['live_search_ajax_status'] = $this->config->get('live_search_ajax_status');
+        $data['live_search_show_image'] = $this->config->get('live_search_show_image');
+        $data['live_search_show_price'] = $this->config->get('live_search_show_price');
+        $data['live_search_show_description'] = $this->config->get('live_search_show_description');
+        $data['live_search_href'] = $this->url->link('product/search', 'search=');
+            ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/language/en-gb/product/search.php">
+        <operation>
+            <search>
+               <![CDATA[<?php]]>
+            </search>
+            <add position="after"><![CDATA[
+$_['text_view_all_results']		= 'View all results';
+            ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/language/ru-ru/product/search.php">
+        <operation>
+            <search>
+               <![CDATA[<?php]]>
+            </search>
+            <add position="after"><![CDATA[
+$_['text_view_all_results']		= 'Показать все результаты';
+            ]]>
+            </add>
+        </operation>
+    </file>
+</modification>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>[Mod] Slideshow Nivo</name>
+    <code>slideshow_mod_ocmod</code>
+    <version>2.3</version>
+    <author>by DiMoss</author>
+    <link>http://forum.opencart-russia.ru/members/dimoss.3919/</link>
+
+    <!-- ADMIN -->
+
+    <file path="admin/controller/extension/module/slideshow.php">
+        <operation>
+            <search><![CDATA[
+            $this->load->model('design/banner');
+            ]]></search>
+            <add position="before"><![CDATA[
+		if (isset($this->request->post['nivo_slider'])) {
+			$data['nivo_slider'] = $this->request->post['nivo_slider'];
+		} elseif (!empty($module_info)) {
+			$data['nivo_slider'] = $module_info['nivo_slider'];
+		} else {
+			$data['nivo_slider'] = '';
+		}
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/extension/module/slideshow.tpl">
+        <operation>
+            <search><![CDATA[
+            <label class="col-sm-2 control-label" for="input-width"><?php echo $entry_width; ?></label>
+            ]]></search>
+            <add position="before" offset="1"><![CDATA[
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-nivo-slider"><?php echo 'NivoSlider'; ?></label>
+            <div class="col-sm-10">
+              <select name="nivo_slider" id="input-nivo-slider" class="form-control">
+                <?php if ($nivo_slider) { ?>
+                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                <option value="0"><?php echo $text_disabled; ?></option>
+                <?php } else { ?>
+                <option value="1"><?php echo $text_enabled; ?></option>
+                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                <?php } ?>
+              </select>
+            </div>
+          </div>
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- FRONTED -->
+
+    <file path="catalog/controller/extension/module/slideshow.php">
+        <operation>
+            <search><![CDATA[
+		    $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
+            ]]></search>
+            <add position="replace" offset="-1"><![CDATA[
+        //Nivo
+        if ($setting['nivo_slider']) {
+            $this->document->addStyle('catalog/view/javascript/jquery/nivo-slider/nivo-slider.css');
+            $this->document->addScript('catalog/view/javascript/jquery/nivo-slider/jquery.nivo.slider.js');
+        } else {
+            $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
+            $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.transitions.css');
+            $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.theme.css');
+		    $this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
+        }
+        //Nivo
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            return $this->load->view('extension/module/slideshow', $data);
+            ]]></search>
+            <add position="replace"><![CDATA[
+        //Nivo
+        if ($setting['nivo_slider']) {
+            return $this->load->view('extension/module/nivo_slideshow', $data);
+        } else {
+            return $this->load->view('extension/module/slideshow', $data);
+        }
+        //Nivo
+            ]]></add>
+        </operation>
+    </file>
+</modification>

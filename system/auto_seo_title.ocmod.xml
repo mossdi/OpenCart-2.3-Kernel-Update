@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Automatic Seo Title</name>
+	<code>automatic_seo_title</code>
+	<version>OC2.3 v.1.0</version>
+	<author>SlaSoft</author>
+
+	<file path="catalog/controller/product/product.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['column_left'] = $this->load->controller('common/column_left');
+			]]></search>
+			<add position="before"><![CDATA[
+			//Autoseotitle
+			if ($this->config->get('autoseotitle_enable')) {
+				$this->load->model('extension/module/autoseotitle');
+				$this->model_extension_module_autoseotitle->setProduct($ajax = false, $product_info, $data['price'], isset($category_info) ? $category_info : array());
+			}
+			//Autoseotitle
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/product/category.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['sort'] = $sort;
+			]]></search>
+			<add position="before"><![CDATA[
+			//Autoseotitle
+			if ($this->config->get('autoseotitle_enable')) {
+				$this->load->model('extension/module/autoseotitle');
+				$this->model_extension_module_autoseotitle->setCategory($category_info);
+			}
+
+			if (isset($this->request->get['attribute_filter']) || isset($this->request->get['sort']) || isset($this->request->get['order']) || isset($this->request->get['limit']) || isset($this->request->get['filter']) || isset($this->request->get['manufacturer_id']) || isset($this->request->get['in_stock']) || isset($this->request->get['page'])) {
+        	    $this->document->setDescription('');
+        	    $this->document->setKeywords('');
+
+        	    $data['description'] = false;
+        	    $data['add_description'] = false;
+        	}
+			//Autoseotitle
+
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/product/manufacturer.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['sort'] = $sort;
+			]]></search>
+			<add position="before"><![CDATA[
+			//Autoseotitle
+			if ($this->config->get('autoseotitle_enable')) {
+				$this->load->model('extension/module/autoseotitle');
+				$this->model_extension_module_autoseotitle->setManufacturer($manufacturer_info);
+			}
+
+        	if (isset($this->request->get['sort']) || isset($this->request->get['order']) || isset($this->request->get['limit']) || isset($this->request->get['filter']) || isset($this->request->get['in_stock']) || isset($this->request->get['page'])) {
+        	    $this->document->setDescription('');
+        	    $this->document->setKeywords('');
+
+        	    $data['description'] = false;
+        	}
+			//Autoseotitle
+			]]></add>
+		</operation>
+	</file>
+</modification>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>[Mod] NextPay</name>
+    <code>next_pay</code>
+    <version>2.3</version>
+    <author>by DiMoss</author>
+    <link>http://forum.opencart-russia.ru/members/dimoss.3919/</link>
+
+    <!-- 1. ACCOUNT-ORDER MODEL (Frontend) -->
+
+    <file path="catalog/model/account/order.php">
+        <operation>
+            <search><![CDATA[
+			'payment_method'          => $order_query->row['payment_method'],
+            ]]></search>
+            <add position="after"><![CDATA[
+				'payment_code'            => $order_query->row['payment_code'], //nextpay
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+            ]]></search>
+            <add position="replace"><![CDATA[
+        //nextpay
+        $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, o.email, os.name as status, o.order_status_id, o.date_added, o.total, o.payment_code, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+        //nextpay
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- 2. ACCOUNT-ORDER CONTROLLER (Frontend) -->
+
+    <file path="catalog/controller/account/order.php">
+        <operation>
+            <search index="0"><![CDATA[
+            $data['button_continue'] = $this->language->get('button_continue');
+            ]]></search>
+            <add position="after"><![CDATA[
+        $data['button_payment'] = $this->language->get('button_payment'); //nextpay
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="1"><![CDATA[
+            $data['button_continue'] = $this->language->get('button_continue');
+            ]]></search>
+            <add position="after"><![CDATA[
+            $data['button_payment'] = $this->language->get('button_payment'); //nextpay
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+			$data['orders'][] = array(
+            ]]></search>
+            <add position="before"><![CDATA[
+            //nextpay
+            $next_payment_url = false;
+
+			if ($result['payment_code'] == 'nextpay' && $result['order_status_id'] == $this->config->get('config_order_status_id_wait') && $this->config->get('nextpay_status')) {
+                $this->load->model('extension/payment/nextpay');
+
+                $next_payment_url = $this->model_extension_payment_nextpay->getPaymentUrl($result);
+            }
+            //nextpay
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+			'order_id'   => $result['order_id'],
+            ]]></search>
+            <add position="after"><![CDATA[
+				'next_payment_url' => $next_payment_url, //nextpay
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+			$data['payment_method'] = $order_info['payment_method'];
+            ]]></search>
+            <add position="after"><![CDATA[
+            //nextpay
+            $data['next_payment_url'] = false;
+
+			if ($order_info['payment_code'] == 'nextpay' && $order_info['order_status_id'] == $this->config->get('config_order_status_id_wait') && $this->config->get('nextpay_status')) {
+                $this->load->model('extension/payment/nextpay');
+
+                $data['next_payment_url'] = $this->model_extension_payment_nextpay->getPaymentUrl($order_info);
+            }
+            //nextpay
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>

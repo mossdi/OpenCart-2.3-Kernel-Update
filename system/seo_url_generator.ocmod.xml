@@ -1,0 +1,553 @@
+<modification>
+    <name><![CDATA[OCEXT SEO URL GENERATOR]]></name>
+    <code>seourlgenerator</code>
+    <version><![CDATA[2.4]]></version>
+    <author><![CDATA[OCEXT]]></author>
+    <link>www.ocext.com</link>   	             
+
+	<file path="admin/view/template/catalog/information_form.tpl">
+		<operation>
+			<search><![CDATA[
+			<input type="text" name="keyword" value="<?php echo $keyword; ?>" placeholder="<?php echo $entry_keyword; ?>" id="input-keyword" class="form-control" />
+			]]></search>
+			<add position="after"><![CDATA[
+			      <input type="button" class="btn btn-primary" id="SEO_URL_GENERATOR" value="SEO URL GENERATOR" style="margin-top: 5px;" />
+                  <script type="text/javascript">
+                        function getSeoUrlGenerator(seo_url_generator,autogenerator){
+                            $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/seourlgenerateajax&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: 'autogenerator='+autogenerator+'&id=<?php if(isset($_GET['information_id'])){ echo $_GET['information_id']; }else{ echo "0"; } ?>&query_part=information_id&name='+encodeURIComponent(seo_url_generator),
+                            	beforeSend: function() {
+                            	},
+                            	complete: function() {
+                            	},
+                            	success: function(response) {
+
+                            	    if(response!=''){
+                            	        $("#input-keyword").val(response);
+                            	    }
+                            	}
+                            });
+                        }
+                        $(document).ready(function() {
+                            var lastSeoUrl = $("#input-keyword").val();
+                            var configLanguageId = getConfigLanguageId();
+                            if(lastSeoUrl==''){
+                                $( "input[name='information_description["+configLanguageId+"][title]']" ).change(function() {
+                                    getSeoUrlGenerator(this.value,0);
+                                });
+                            }
+                        });
+                        
+                        function getConfigLanguageId(){
+                            response = $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/getConfigLanguageId&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: '',
+                            	async: false
+                            }).responseText;
+                            
+                            return response;
+                        }
+                        
+                        $( "#SEO_URL_GENERATOR" ).click(function() {
+                            
+                            var configLanguageId = getConfigLanguageId();
+                            
+                            var nameContent = $( "input[name='information_description["+configLanguageId+"][title]']" ).val();
+                            
+                            if(nameContent==''){
+                                alert('Сначала создайте название. Невозможно сгенерировать SEO URL без названия');
+                                return;
+                            }else{
+                                getSeoUrlGenerator(nameContent,1);
+                            }
+                        });
+                  </script>
+			]]></add>
+		</operation>		
+	</file>
+
+	<file path="admin/view/template/catalog/product_form.tpl">
+		<operation>
+			<search><![CDATA[
+			<input type="text" name="keyword" value="<?php echo $keyword; ?>" placeholder="<?php echo $entry_keyword; ?>" id="input-keyword" class="form-control" />
+			]]></search>
+			<add position="after"><![CDATA[
+				  <input type="button" class="btn btn-primary" id="SEO_URL_GENERATOR" value="SEO URL GENERATOR" style="margin-top: 5px;" />
+                  <script type="text/javascript">
+                        function getSeoUrlGenerator(seo_url_generator,autogenerator){
+                            $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/seourlgenerateajax&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: 'autogenerator='+autogenerator+'&id=<?php if(isset($_GET['product_id'])){ echo $_GET['product_id']; }else{ echo "0"; } ?>&query_part=product_id&name='+encodeURIComponent(seo_url_generator),
+                            	beforeSend: function() {
+                            	},
+                            	complete: function() {
+                            	},
+                            	success: function(response) {
+
+                            	    if(response!=''){
+                            	        $("#input-keyword").val(response);
+                            	    }
+                            	}
+                            });
+                        }
+                        $(document).ready(function() {
+                            var lastSeoUrl = $("#input-keyword").val();
+                            var configLanguageId = getConfigLanguageId();
+                            //Если при загрузке странице SEO URL уже есть, то менять его нельзя, без подтверждения юзера
+                            //Для этого есть кнопка генерации
+                            if(lastSeoUrl==''){
+                                $( "input[name='product_description["+configLanguageId+"][name]']" ).change(function() {
+                                    getSeoUrlGenerator(this.value,0);
+                                });
+                            }
+                        });
+                        
+                        function getConfigLanguageId(){
+                            
+                            response = $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/getConfigLanguageId&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: '',
+                            	async: false
+                            }).responseText;
+                            
+                            return response;
+                        }
+                        
+                        $( "#SEO_URL_GENERATOR" ).click(function() {
+                            var configLanguageId = getConfigLanguageId();
+                            var nameContent = $( "input[name='product_description["+configLanguageId+"][name]']" ).val();
+                            if(nameContent==''){
+                                alert('Сначала создайте название. Невозможно сгенерировать SEO URL без названия');
+                                return;
+                            }else{
+                                getSeoUrlGenerator(nameContent,1);
+                            }
+                        });
+                  </script>
+			]]></add>
+		</operation>		
+	</file>
+    
+	<file path="admin/view/template/catalog/category_form.tpl">
+		<operation>
+			<search><![CDATA[
+			<input type="text" name="keyword" value="<?php echo $keyword; ?>" placeholder="<?php echo $entry_keyword; ?>" id="input-keyword" class="form-control" />
+			]]></search>
+			<add position="after"><![CDATA[
+				  <input type="button" class="btn btn-primary" id="SEO_URL_GENERATOR" value="SEO URL GENERATOR" style="margin-top: 5px;" />
+                  <script type="text/javascript">
+                        function getSeoUrlGenerator(seo_url_generator,autogenerator){
+                            $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/seourlgenerateajax&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: 'autogenerator='+autogenerator+'&id=<?php if(isset($_GET['category_id'])){ echo $_GET['category_id']; }else{ echo "0"; } ?>&query_part=category_id&name='+seo_url_generator,
+                            	beforeSend: function() {
+                            	},
+                            	complete: function() {
+                            	},
+                            	success: function(response) {
+                            	    if(response!=''){
+                            	        $("#input-keyword").val(response);
+                            	    }
+                            	}
+                            });
+                        }
+                        $(document).ready(function() {
+                            var lastSeoUrl = $("#input-keyword").val();
+                            var configLanguageId = getConfigLanguageId();
+                            if(lastSeoUrl==''){
+                                $( "input[name='category_description["+configLanguageId+"][name]']" ).change(function() {
+                                    getSeoUrlGenerator(this.value,0);
+                                });
+                            }
+                        });
+                        
+                        function getConfigLanguageId(){
+                            
+                            response = $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/getConfigLanguageId&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: '',
+                            	async: false
+                            }).responseText;
+                            
+                            return response;
+                        }
+                        
+                        $( "#SEO_URL_GENERATOR" ).click(function() {
+                            var configLanguageId = getConfigLanguageId();
+                            var nameContent = $( "input[name='category_description["+configLanguageId+"][name]']" ).val();
+                            if(nameContent==''){
+                                alert('Сначала создайте название. Невозможно сгенерировать SEO URL без названия');
+                                return;
+                            }else{
+                                getSeoUrlGenerator(nameContent,1);
+                            }
+                        });
+                  </script>
+			]]></add>
+		</operation>		
+	</file>
+        <file path="admin/view/template/catalog/manufacturer_form.tpl">
+		<operation>
+			<search><![CDATA[
+			<input type="text" name="keyword" value="<?php echo $keyword; ?>" placeholder="<?php echo $entry_keyword; ?>" id="input-keyword" class="form-control" />
+			]]></search>
+			<add position="after"><![CDATA[
+				  <input type="button" class="btn btn-primary" id="SEO_URL_GENERATOR" value="SEO URL GENERATOR" style="margin-top: 5px;" />
+                  <script type="text/javascript">
+                        function getSeoUrlGenerator(seo_url_generator,autogenerator){
+                            $.ajax({
+                            	url: 'index.php?route=extension/module/seourlgenerator/seourlgenerateajax&token=<?php echo $token; ?>',
+                            	type: 'post',
+                            	dataType: 'html',
+                            	data: 'autogenerator='+autogenerator+'&id=<?php if(isset($_GET['manufacturer_id'])){ echo $_GET['manufacturer_id']; }else{ echo "0"; } ?>&query_part=manufacturer_id&name='+seo_url_generator,
+                            	beforeSend: function() {
+                            	},
+                            	complete: function() {
+                            	},
+                            	success: function(response) {
+                            	    if(response!=''){
+                            	        $("#input-keyword").val(response);
+                            	    }
+                            	}
+                            });
+                        }
+
+                        $(document).ready(function() {
+                            var lastSeoUrl = $("#input-keyword").val();
+                            //Если при загрузке странице SEO URL уже есть, то менять его нельзя, без подтверждения юзера
+                            //Для этого есть кнопка генерации
+                            if(lastSeoUrl==''){
+                                $( "input[name='name']" ).change(function() {
+                                    getSeoUrlGenerator(this.value,0);
+                                });
+                            }
+                        });
+
+                        $( "#SEO_URL_GENERATOR" ).click(function() {
+                            var nameContent = $( "input[name='name']" ).val();
+                            if(nameContent==''){
+                                alert('Сначала создайте название. Невозможно сгенерировать SEO URL без названия');
+                                return;
+                            }else{
+                                getSeoUrlGenerator(nameContent,1);
+                            }
+                        });
+                  </script>
+			]]></add>
+		</operation>		
+	</file>
+
+	<file path="catalog/controller/startup/seo_url.php">
+		<operation>
+			<search><![CDATA[
+			public function index() {
+			]]></search>
+			<add position="before"><![CDATA[
+	//seourlgenerator
+    public function getCategories($product_id) {
+    	$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
+
+    	return $query->rows;
+    }
+
+    public function getDataWhisPath(&$data) {
+        if(!$this->config->get('seourlgenerator_canonical_products')){
+            return;
+        }
+        foreach ($data as $key => $value) {
+            if (isset($data['route'])) {
+                if (($data['route'] == 'product/product' && $key == 'product_id')){
+                    $allCategories = $this->getAllCategories();
+                    $getCategories = $this->getCategories($value);
+                    $categories = array();
+                    if($getCategories){
+                        $path = '';
+                        $main_path = '';
+                        foreach ($getCategories as $category) {
+                            if ($this->config->get('seourlgenerator_select_main_category')) {
+
+                                $main_path = $this->getCategoriesMainPath($value,$allCategories);
+                            }
+
+                            if ($main_path) {
+                                $path = $main_path;
+                            } else {
+                                $check_path = $this->getCategoriesPath($allCategories, $category['category_id']);
+
+                                if (mb_strlen($check_path) > mb_strlen($path)) {
+                                	$path = $check_path;
+                                }
+                            }
+                        }
+                    }
+
+                    if (isset($path) && $path) {
+                        if(isset($data['manufacturer_id'])){
+                            unset($data['manufacturer_id']);
+                        }
+
+                        $data['path'] = $path;
+                    }
+                }
+            }
+        }
+
+        ksort($data);
+    }
+
+    public function getCategoriesMainPath($product_id,$categories) {
+        $main_path = '';
+
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "' AND main_category=1");
+
+        if($query->row){
+            $main_path = $this->getCategoriesPath($categories, $query->row['category_id']);
+        }
+
+        return $main_path;
+    }
+
+    public function getAllCategories() {
+        $sql = "SELECT cd.name, c.category_id, c.parent_id FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) LEFT JOIN " . DB_PREFIX . "category_to_store c2s ON (c.category_id = c2s.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  AND c.status = '1' AND c.sort_order <> '-1'";
+        $query = $this->db->query($sql);
+        $categories = array();
+        if($query->rows){
+            foreach ($query->rows as $category) {
+                $parent_id = (int)$category['parent_id'];
+                $category_id = (int)$category['category_id'];
+                $name = $category['name'];
+                if($parent_id > 0) {
+                    $categories[$category_id] = array(
+                            'id'=>$category_id,
+                            'parentId'=>$parent_id,
+                            'name'=>$name
+                    );
+                }else{
+                    $categories[$category_id] = array(
+                        'id'=>$category_id,
+                        'name'=>$name
+                    );
+                }
+            }
+        }
+
+        return $categories;
+    }
+
+    protected function getCategoriesPath($categories,$category_id,$old_path = '') {
+        if (isset($categories[$category_id])) {
+            if (!$old_path) {
+                $new_path = $categories[$category_id]['id'];
+            } else {
+                $new_path = $categories[$category_id]['id'].'_'.$old_path;
+            }
+            if (isset($categories[$category_id]['parentId'])) {
+                return $this->getCategoriesPath($categories,$categories[$category_id]['parentId'], $new_path);
+            } else {
+                return $new_path;
+            }
+        }
+    }
+
+    protected function redirectOnUrlWhisPath($route) {
+
+        if(!$this->config->get('seourlgenerator_canonical_products')){
+            return;
+        }
+
+        $parts = explode('/', $route);
+
+        foreach ($parts as $part) {
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
+
+                if ($query->num_rows) {
+                        $url = explode('=', $query->row['query']);
+
+                        if ($url[0] == 'product_id') {
+                            $link = HTTP_SERVER.'index.php?route=product/product&product_id='.$url[1];
+                            $seo_url = $this->rewrite($link);
+                            $seo_url = $this->getSeoUrlPart($seo_url);
+                            if($route!=$seo_url){
+                                $this->response->redirect(HTTP_SERVER.$seo_url,301);
+                            }
+                        }
+                }
+        }
+
+    }
+
+    protected function getSeoUrlPart($seo_url) {
+        $seo_url = str_replace(HTTP_SERVER, '', $seo_url);
+        $parts = explode('/', $seo_url);
+        $seo_url = implode('/', $parts);
+        return $seo_url;
+    }
+    //seourlgenerator
+			]]></add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+			parse_str($url_info['query'], $data);
+			]]></search>
+			<add position="after"><![CDATA[
+        $this->getDataWhisPath($data);
+			]]></add>
+		</operation>	
+        <operation>
+			<search><![CDATA[
+			$parts = explode('/', $this->request->get['_route_']);
+			]]></search>
+			<add position="before"><![CDATA[
+            $this->redirectOnUrlWhisPath($this->request->get['_route_']);
+			]]></add>
+		</operation>		
+	</file>
+
+	<file path="catalog/controller/common/header.php">
+		<operation>
+			<search><![CDATA[
+			$data['title'] = $this->document->getTitle();
+			]]></search>
+			<add position="after"><![CDATA[
+        //OCEXT SEO URL GENERATOR - microdata
+        $this->load->model('extension/module/seourlgenerator');
+
+        $microdataseourlgenerator = $this->model_extension_module_seourlgenerator->getScript();
+
+        if($microdataseourlgenerator){
+            $data['analytics'][] = $microdataseourlgenerator;
+        }
+        //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>	
+
+	<file path="catalog/controller/product/product.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+            //OCEXT SEO URL GENERATOR - microdata
+            $this->load->model('extension/module/seourlgenerator');
+
+            if(isset($data)){
+                $this->model_extension_module_seourlgenerator->addScript($data);
+            }
+            //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/product/category.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+            //OCEXT SEO URL GENERATOR - microdata
+            $this->load->model('extension/module/seourlgenerator');
+
+            if(isset($data)){
+                $this->model_extension_module_seourlgenerator->addScript($data);
+            }
+            //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>	
+
+	<file path="catalog/controller/product/manufacturer.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+        //OCEXT SEO URL GENERATOR - microdata
+        $this->load->model('extension/module/seourlgenerator');
+
+        if(isset($data)){
+            $this->model_extension_module_seourlgenerator->addScript($data);
+        }
+        //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+		<operation>
+			<search index="1"><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+        	//OCEXT SEO URL GENERATOR - microdata
+        	$this->load->model('extension/module/seourlgenerator');
+        	
+        	if(isset($data)){
+        	    $this->model_extension_module_seourlgenerator->addScript($data);
+        	}
+        	//end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>	
+
+	<file path="catalog/controller/product/special.php">
+		<operation>
+			<search><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+        //OCEXT SEO URL GENERATOR - microdata
+        $this->load->model('extension/module/seourlgenerator');
+
+        if(isset($data)){
+            $this->model_extension_module_seourlgenerator->addScript($data);
+        }
+        //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>	
+
+	<file path="catalog/controller/information/information.php">
+		<operation>
+			<search index="0"><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+            //OCEXT SEO URL GENERATOR - microdata
+            $this->load->model('extension/module/seourlgenerator');
+
+            if(isset($data)){
+                $this->model_extension_module_seourlgenerator->addScript($data);
+            }
+            //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/information/contact.php">
+		<operation>
+			<search><![CDATA[
+			$data['footer'] = $this->load->controller('common/footer');
+			]]></search>
+			<add position="after"><![CDATA[
+        //OCEXT SEO URL GENERATOR - microdata
+        $this->load->model('extension/module/seourlgenerator');
+
+        if(isset($data)){
+            $this->model_extension_module_seourlgenerator->addScript($data);
+        }
+        //end OCEXT SEO URL GENERATOR - microdata
+			]]></add>
+		</operation>
+	</file>
+</modification>

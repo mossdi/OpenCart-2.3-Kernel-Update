@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Символ РУБля</name>
+	<code>symbol_rub</code>
+	<version>1.1</version>
+	<author>mars1an</author>
+	<link>http://forum.opencart-russia.ru/members/mars1an.611/</link>
+
+	<file path="system/library/cart/currency.php">
+		<operation>
+			<search><![CDATA[
+			$result['symbol_right'],
+			]]></search>
+			<add position="replace" trim="true"><![CDATA[
+			html_entity_decode($result['symbol_right']), //symbol rub mod
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/common/currency.php">
+		<operation>
+			<search><![CDATA[
+			$result['symbol_right']
+			]]></search>
+			<add position="replace" trim="true"><![CDATA[
+			html_entity_decode($result['symbol_right']) //symbol rub mod
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/view/theme/default/template/common/currency.tpl">
+		<operation>
+			<search><![CDATA[
+			<?php echo $currency['symbol_right']; ?>
+			]]></search>
+			<add position="replace" trim="true"><![CDATA[
+			<?php echo html_entity_decode($currency['symbol_right']); ?>
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/view/template/common/header.tpl">
+		<operation>
+			<search><![CDATA[
+			<link type="text/css" href="view/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
+			]]></search>
+			<add position="after" trim="true"><![CDATA[
+<link type="text/css" href="view/stylesheet/rub.css" rel="stylesheet" media="screen" />
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/controller/localisation/currency.php">
+		<operation>
+			<search><![CDATA[
+			$data['help_code'] = $this->language->get('help_code');
+			]]></search>
+			<add position="after"><![CDATA[
+		$data['help_symbol_right'] = $this->language->get('help_symbol_right');
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/view/template/localisation/currency_form.tpl">
+		<operation>
+			<search><![CDATA[
+			<div class="panel panel-default">
+			]]></search>
+			<add position="before"><![CDATA[
+	<div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $help_symbol_right; ?>
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/language/*/localisation/currency.php">
+		<operation>
+			<search><![CDATA[
+			$_['help_value']
+			]]></search>
+			<add position="before"><![CDATA[
+$_['help_symbol_right']    = 'Для отображения стилизованного знака рубля ( <i class="fa fa-rub"></i> ) в поле \'Символ справа\' введите код - для Web Font: &lt;span class=&quot;rub&quot;&gt;Р&lt;/span&gt;, для Font Awesome: &lt;i class=&quot;fa fa-rub&quot;&gt;&lt;/i&gt;, и для Glyphicons: &lt;span class=&quot;glyphicon glyphicon-rub&quot;&gt;&lt;/span&gt;.<br />Для тех кто волнуется за СЕО и поисковику хочет сообщить что эти цифры являются ценой: &amp;nbsp;&lt;span class=&quot;hidden&quot;&gt;рублей&lt;/span&gt;&lt;i class=&quot;fa fa-rub&quot;&gt;&lt;/i&gt;.';
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

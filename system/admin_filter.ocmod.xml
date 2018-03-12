@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Admin product filter</name>
+    <code>admin_product_filter</code>
+    <version>2.3</version>
+    <author>by DiMoss</author>
+    <link>http://forum.opencart-russia.ru/members/dimoss.3919/</link>
+
+    <!-- ======================================= //ADMIN-PANEL// ======================================= -->
+
+    <!-- *** START LANGUAGE (Admin-panel) *** -->
+
+    <!--  0.  RU-RU/EN-GB LANGUAGE (Admin-panel) -->
+
+    <file path="admin/language/ru-ru/catalog/product.php">
+        <operation error="skip">
+            <search><![CDATA[
+            $_['entry_name']
+            ]]></search>
+            <add position="before"><![CDATA[
+$_['entry_category_filter']   = 'Категория';
+$_['select_no_manufacturers'] = 'Без производителей';
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/language/en-gb/catalog/product.php">
+        <operation error="skip">
+            <search><![CDATA[
+            $_['entry_name']
+            ]]></search>
+            <add position="before"><![CDATA[
+$_['entry_category_filter']   = 'Category';
+$_['select_no_manufacturers'] = '- Unknown -';
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- *** //END LANGUAGE (Admin-panel) *** -->
+
+
+
+    <!-- *** START MODEL (Admin-panel) *** -->
+
+    <!--  1.  PRODUCT MODEL (Admin-panel) -->
+
+    <file path="admin/model/catalog/product.php">
+        <operation>
+            <search><![CDATA[
+            $sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            ]]></search>
+            <add position="replace"><![CDATA[
+        # admin_product_filter
+        $sql = "SELECT *";
+
+        if (!empty($data['filter_category_id'])) {
+            if (!empty($data['filter_sub_category'])) {
+                $sql .= " FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id)";
+            } else {
+                $sql .= " FROM " . DB_PREFIX . "product_to_category p2c";
+            }
+
+            $sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
+        } else {
+            $sql .= " FROM " . DB_PREFIX . "product p";
+        }
+
+        $sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+        if (!empty($data['filter_category_id'])) {
+            if (!empty($data['filter_sub_category'])) {
+                $sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+            } else {
+                $sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+            }
+        }
+
+        if (isset($data['filter_manufacturer'])) {
+            if (!empty($data['filter_manufacturer']) || $data['filter_manufacturer'] == '0') {
+                $sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer'] . "'";
+            }
+        }
+
+        if (!empty($data['filter_sku'])) {
+            $sql .= " AND p.sku LIKE '%" . $this->db->escape($data['filter_sku']) . "%'";
+        }
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+            ]]></search>
+            <add position="replace" offset="2"><![CDATA[
+        $sql = "SELECT COUNT(DISTINCT p.product_id) AS total";
+
+        # admin_product_filter
+        if (!empty($data['filter_category_id'])) {
+            if (!empty($data['filter_sub_category'])) {
+                $sql .= " FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id)";
+            } else {
+                $sql .= " FROM " . DB_PREFIX . "product_to_category p2c";
+            }
+
+            $sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
+        } else {
+            $sql .= " FROM " . DB_PREFIX . "product p";
+        }
+
+        $sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+        if (!empty($data['filter_category_id'])) {
+            if (!empty($data['filter_sub_category'])) {
+                $sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+            } else {
+                $sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+            }
+        }
+
+        if (isset($data['filter_manufacturer'])) {
+            if (!empty($data['filter_manufacturer']) || $data['filter_manufacturer'] == '0') {
+                $sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer'] . "'";
+            }
+        }
+
+        if (!empty($data['filter_sku'])) {
+            $sql .= " AND p.sku LIKE '%" . $this->db->escape($data['filter_sku']) . "%'";
+        }
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            ]]></search>
+            <add position="replace"><![CDATA[
+            $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- *** //END MODEL (Admin-panel) *** -->
+
+
+
+    <!-- *** START CONTROLLER (Admin-panel) *** -->
+
+    <!--  1.  PRODUCT CONTROLLER (Admin-panel) -->
+
+    <file path="admin/controller/catalog/product.php">
+        <operation>
+            <search><![CDATA[
+            protected function getList() {
+            ]]></search>
+            <add position="after"><![CDATA[
+        # admin_product_filter
+        $this->load->language('common/footer');
+
+        if (isset($this->request->get['filter_category'])) {
+            $filter_category = $this->request->get['filter_category'];
+        } else {
+            $filter_category = NULL;
+        }
+
+        if (isset($this->request->get['filter_manufacturer'])) {
+            $filter_manufacturer = $this->request->get['filter_manufacturer'];
+        } else {
+            $filter_manufacturer = NULL;
+        }
+
+        if (isset($this->request->get['filter_sku'])) {
+            $filter_sku = $this->request->get['filter_sku'];
+        } else {
+            $filter_sku = NULL;
+        }
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0,1,2,3"><![CDATA[
+            $url = '';
+            ]]></search>
+            <add position="after"><![CDATA[
+            # admin_product_filter
+            if (isset($this->request->get['filter_category'])) {
+                $url .= '&filter_category=' . $this->request->get['filter_category'];
+            }
+
+            if (isset($this->request->get['filter_manufacturer'])) {
+                $url .= '&filter_manufacturer=' . $this->request->get['filter_manufacturer'];
+            }
+
+            if (isset($this->request->get['filter_sku'])) {
+                $url .= '&filter_sku=' . $this->request->get['filter_sku'];
+            }
+            # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="4,5,6,7"><![CDATA[
+            $url = '';
+            ]]></search>
+            <add position="after"><![CDATA[
+        # admin_product_filter
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . $this->request->get['filter_category'];
+        }
+
+        if (isset($this->request->get['filter_manufacturer'])) {
+            $url .= '&filter_manufacturer=' . $this->request->get['filter_manufacturer'];
+        }
+
+        if (isset($this->request->get['filter_sku'])) {
+            $url .= '&filter_sku=' . $this->request->get['filter_sku'];
+        }
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0"><![CDATA[
+            $filter_data = array(
+            ]]></search>
+            <add position="after"><![CDATA[
+            # admin_product_filter
+            'filter_category_id'    => $filter_category,
+            'filter_sub_category'   => true,
+            'filter_manufacturer'   => $filter_manufacturer,
+            'filter_sku'            => $filter_sku,
+            # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0"><![CDATA[
+            foreach ($results as $result) {
+            ]]></search>
+            <add position="before"><![CDATA[
+        # admin_product_filter
+        $filter_data = array(
+            'sort'               => 'name',
+            'order'              => 'ASC',
+            'only_true_category' => true
+        );
+
+        $this->load->model('catalog/category');
+
+        $data['categories'] = $this->model_catalog_category->getCategories($filter_data);
+        $data['product_categories'] = $this->model_catalog_category->getCategories([
+            'sort'               => 'name',
+            'order'              => 'ASC'
+        ]);
+
+        $this->load->model('catalog/manufacturer');
+        
+        $data['manufacturers'][] = array(
+           'name'            => $this->language->get('select_no_manufacturers'),
+           'manufacturer_id' => '0',
+           'sort_order'      => '0'
+        );
+
+        $data['manufacturers'] = array_merge($data['manufacturers'], $this->model_catalog_manufacturer->getManufacturers($filter_data));
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $data['filter_name'] = $filter_name;
+            ]]></search>
+            <add position="after"><![CDATA[
+        # admin_product_filter
+        $data['filter_category'] = $filter_category;
+        $data['filter_manufacturer'] = $filter_manufacturer;
+        $data['filter_sku'] = $filter_sku;
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0"><![CDATA[
+            foreach ($results as $result) {
+            ]]></search>
+            <add position="after"><![CDATA[
+            $category =  $this->model_catalog_product->getProductCategories($result['product_id']); # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0"><![CDATA[
+            $data['products'][] = array(
+            ]]></search>
+            <add position="after"><![CDATA[
+                'category'   => $category,
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="0"><![CDATA[
+            $data['entry_name'] = $this->language->get('entry_name');
+            ]]></search>
+            <add position="after"><![CDATA[
+        # admin_product_filter
+        $data['ocstore'] = strripos($this->language->get('text_footer'), 'ocstore');
+        $data['entry_category_filter'] = $this->language->get('entry_category_filter');
+        $data['entry_category'] = $this->language->get('entry_category');
+        $data['entry_manufacturer'] = $this->language->get('entry_manufacturer');
+        $data['entry_sku'] = $this->language->get('entry_sku');
+        $data['select_no_manufacturers'] = $this->language->get('select_no_manufacturers');
+        # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_model'])) {
+            ]]></search>
+            <add position="replace"><![CDATA[
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_model']) || isset($this->request->get['filter_sku'])) {
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            if (isset($this->request->get['limit'])) {
+            ]]></search>
+            <add position="before"><![CDATA[
+            # admin_product_filter
+            if (isset($this->request->get['filter_sku'])) {
+                $filter_sku = $this->request->get['filter_sku'];
+            } else {
+                $filter_sku = '';
+            }
+            # admin_product_filter
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            'filter_name'  => $filter_name,
+            ]]></search>
+            <add position="after"><![CDATA[
+                'filter_sku' => $filter_sku,
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $json[] = array(
+            ]]></search>
+            <add position="after"><![CDATA[
+                    'sku' => $result['sku'],
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- *** //END CONTROLLER (Admin-panel) *** -->
+
+
+
+    <!-- *** START TEMPLATE (Admin-panel) *** -->
+
+    <!--  1.  PRODUCT TEMPLATE (Admin-panel) -->
+
+    <file path="admin/view/template/catalog/product_list.tpl">
+        <operation>
+            <search index="1"><![CDATA[
+            <div class="form-group">
+            ]]></search>
+            <add position="before"><![CDATA[
+              <div class="form-group">
+                  <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
+                  <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
+              </div>
+              <div class="form-group">
+                  <label class="control-label" for="input-sku"><?php echo $entry_sku; ?></label>
+                  <input type="text" name="filter_sku" value="<?php echo $filter_sku; ?>" placeholder="<?php echo $entry_sku; ?>" id="input-sku" class="form-control" />
+              </div>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            name="filter_price"
+            ]]></search>
+            <add position="after" offset="1"><![CDATA[
+              <div class="form-group">
+                  <label class="control-label" for="input-sku"><?php echo $entry_sku; ?></label>
+                  <input type="text" name="filter_sku" value="<?php echo $filter_sku; ?>" placeholder="<?php echo $entry_sku; ?>" id="input-sku" class="form-control" />
+              </div>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            name="filter_quantity"
+            ]]></search>
+            <add position="after" offset="1"><![CDATA[
+              <div class="form-group">
+                  <label class="control-label" for="input-category"><?php echo $entry_category_filter; ?></label>
+                  <select name="filter_category" id="input-category" class="form-control" />
+                      <option value="*"></option>
+                      <?php foreach ($categories as $category) { ?>
+                          <?php if ($category['category_id']==$filter_category) { ?>
+                              <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                          <?php } else { ?>
+                              <option value="<?php echo $category['category_id']; ?>">&nbsp;&nbsp;<?php echo $category['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                          <?php } ?>
+                      <?php } ?>
+                  </select>
+              </div>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            <button type="button" id="button-filter" class="btn btn-primary pull-right">
+            ]]></search>
+            <add position="before"><![CDATA[
+              <div class="form-group">
+                  <label class="control-label" for="input-manufacturer"><?php echo $entry_manufacturer; ?></label>
+                  <select name="filter_manufacturer" id="input-manufacturer" class="form-control" />
+                      <option value="*"></option>
+                      <?php foreach ($manufacturers as $manufacturer) { ?>
+                          <?php if ($manufacturer['manufacturer_id']==$filter_manufacturer) { ?>
+                              <option value="<?php echo $manufacturer['manufacturer_id']; ?>" selected="selected"><?php echo $manufacturer['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                          <?php } else { ?>
+                              <option value="<?php echo $manufacturer['manufacturer_id']; ?>">&nbsp;&nbsp;<?php echo $manufacturer['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                          <?php } ?>
+                      <?php } ?>
+                  </select>
+              </div>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            <td class="text-right"><?php if ($sort == 'p.quantity') { ?>
+            ]]></search>
+            <add position="before"><![CDATA[
+                  <td class="text-left">
+                      <?php echo $entry_category; ?>
+                  </td>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            <td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
+            ]]></search>
+            <add position="before"><![CDATA[
+                  <td class="text-left">
+                      <?php foreach ($product_categories as $category) { ?>
+                          <?php if (in_array($category['category_id'], $product['category'])) { ?>
+                              <?php echo $category['name'];?><br>
+                          <?php } ?>
+                      <?php } ?>
+                  </td>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            var filter_model = $('input[name=\'filter_model\']').val();
+            ]]></search>
+            <add position="before"><![CDATA[
+    var filter_category = $('select[name=\'filter_category\']').val();
+    if (filter_category != '*') {
+        url += '&filter_category=' + encodeURIComponent(filter_category);
+    }
+    var filter_manufacturer = $('select[name=\'filter_manufacturer\']').val();
+    if (filter_manufacturer != '*') {
+        url += '&filter_manufacturer=' + encodeURIComponent(filter_manufacturer);
+    }
+    var filter_sku = $('input[name=\'filter_sku\']').val();
+    if (filter_sku) {
+        url += '&filter_sku=' + encodeURIComponent(filter_sku);
+    }
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $('input[name=\'filter_model\']').autocomplete({
+            ]]></search>
+            <add position="before"><![CDATA[
+$('input[name=\'filter_sku\']').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_sku=' +  encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['sku'],
+                        value: item['product_id']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+        $('input[name=\'filter_sku\']').val(item['label']);
+    }
+});
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- *** START TEMPLATE (Admin-panel) *** -->
+
+</modification>

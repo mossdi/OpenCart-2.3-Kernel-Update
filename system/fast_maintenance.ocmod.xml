@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<name>Fast Maintenance</name>
+	<code>FastMaintenance</code>
+	<version>3.0</version>
+	<author>Slasoft</author>
+	
+	<file path="admin/controller/common/footer.php">
+		<operation>
+			<search><![CDATA[$this->load->view('common/footer']]></search>
+			<add position="before"><![CDATA[
+		$data['mainteance'] = $this->config->get('config_maintenance') && isset($this->request->get['token']);
+
+		if (isset($this->request->get['token'])) {
+			$data['mainteance_url'] = $this->url->link('setting/fast_maintenance','token='. $this->session->data['token']);
+		}
+			]]></add>
+		</operation>
+	</file>	
+	<file path="admin/view/template/common/footer.tpl">
+		<operation>
+			<search><![CDATA[ </body> ]]></search>
+			<add position="before"><![CDATA[
+<?php if ($mainteance) { ?>
+<div style="position:fixed;bottom:0;left:0;width:64px;height:56px;z-index:1000">
+	<a href="<?php echo $mainteance_url; ?>"><img src="view/image/danger.png" alt="" /></a>
+</div>
+<?php }; ?>
+			]]></add>
+		</operation>
+	</file>
+</modification>

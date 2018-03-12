@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <code>left_menu_add</code>
+    <name>Left Menu Add</name>
+    <version>2.3</version>
+    <author>by DiMoss</author>
+    <link>http://forum.opencart-russia.ru/members/dimoss.3919/</link>
+
+    <file path="admin/language/ru-ru/common/column_left.php">
+        <operation>
+            <search><![CDATA[
+            $_['text_other_status']
+            ]]></search>
+            <add position="after"><![CDATA[
+$_['text_cdek_shipping']              = 'Заявки';
+$_['text_cdek_setting']               = 'Настройки';
+$_['text_cdek_integrator']            = 'СДЭК-Интегратор';
+$_['text_xml_dispatcher']             = 'Диспетчер YML\XML';
+      ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[
+            // Catalog
+            ]]></search>
+            <add position="before"><![CDATA[
+            //CDEK
+            $cdek_itegrator = array();
+
+            if ($this->user->hasPermission('access', 'extension/module/cdek_integrator')) {
+                $cdek_itegrator[] = array(
+                    'name'     => $this->language->get('text_cdek_shipping'),
+                    'href'     => $this->url->link('extension/module/cdek_integrator', 'token=' . $this->session->data['token'], true),
+                    'children' => array()
+                );
+            }
+
+            if ($this->user->hasPermission('access', 'extension/module/cdek_integrator')) {
+                $cdek_itegrator[] = array(
+                    'name'     => $this->language->get('text_cdek_setting'),
+                    'href'     => $this->url->link('extension/module/cdek_integrator/option', 'token=' . $this->session->data['token'], true),
+                    'children' => array()
+                );
+            }
+
+            if ($cdek_itegrator) {
+                $data['menus'][] = array(
+                    'id'       => 'menu-cdek',
+                    'icon'     => 'fa-truck',
+                    'name'     => $this->language->get('text_cdek_integrator'),
+                    'href'     => '',
+                    'children' => $cdek_itegrator
+                );
+            }
+
+            //Диспетчер YML\XML
+            if ($this->user->hasPermission('access', 'extension/module/zoxml2')) {
+                $data['menus'][] = array(
+                    'id'       => 'menu-xml-dispatcher',
+                    'icon'     => 'fa fa-download',
+                    'name'     => $this->language->get('text_xml_dispatcher'),
+                    'href'     => $this->url->link('extension/module/zoxml2', 'token=' . $this->session->data['token'], true),
+                    'children' => array()
+                );
+            }
+            ]]></add>
+        </operation>
+    </file>
+</modification>
