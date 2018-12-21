@@ -127,10 +127,12 @@ $_['entry_add_description']   = 'Доп.описание';
 $_['entry_cut']               = 'Обрезать последнее слово в имени категории';
 $_['entry_search_related']    = 'Искать родственные категории по имени';
 $_['entry_search_regex']      = 'Регулярное выражение для preg_replace';
+$_['entry_related']           = 'Дочерние товары';
 
 //Tab
 $_['tab_parent']             = 'Родительский товаров';
 $_['tab_custom_template']    = 'Шаблон отображения категории';
+$_['tab_related']            = 'Дочерние товары';
 
 //Column
 $_['column_parent']          = 'Родительский товар';
@@ -182,14 +184,16 @@ $_['entry_add_description']   = 'Additional description';
 $_['entry_cut']               = 'Сut category name';
 $_['entry_search_related']    = 'Search related categories by name';
 $_['entry_search_regex']      = 'Regular expression for preg_replace';
+$_['entry_related']           = 'Subsidiaries';
 
 //Tab
 $_['tab_parent']             = 'Parent product';
 $_['tab_custom_template']    = 'Custom template';
+$_['tab_related']            = 'Subsidiaries';
 
 //Column
 $_['column_parent']          = 'Parent product';
-$_['column_templates']        = 'Templates';
+$_['column_templates']       = 'Templates';
 $_['column_attributes']      = 'Attributes';
 $_['column_status']          = 'Status';
 
@@ -214,6 +218,8 @@ $_['entry_main_category']    = 'Главная категория';
 $_['entry_thumb_size']       = 'Размер большого изображения товара';
 $_['entry_logged']           = 'Для зарег-х';
 
+$_['text_create_parent_product']  = 'Новая категория с товаром';
+
 $_['column_sku']             = 'Артикул';
 $_['column_seo_url']         = 'SEO-url';
 $_['column_variant']         = 'Вариация';
@@ -231,6 +237,8 @@ $_['column_variant']         = 'Вариация';
 $_['entry_main_category']    = 'Main category';
 $_['entry_thumb_size']       = 'Product image size';
 $_['entry_logged']           = 'For Logged';
+
+$_['text_create_parent_product']  = 'New category with products';
 
 $_['column_sku']             = 'Sku';
 $_['column_seo_url']         = 'SEO-url';
@@ -476,6 +484,14 @@ $_['text_content_middle'] = 'Content Center';
 		        $this->db->query("UPDATE " . DB_PREFIX . "product SET variation = '" . (int)$product_variant_value . "' WHERE product_id = '" . (int)$result['product_id'] . "'");
 		    }
 		}
+
+		if (isset($data['product_related'])) {
+		    foreach ($data['product_related'] as $product_id) {
+                $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "', main_category = '1'");
+                $this->db->query("UPDATE " . DB_PREFIX . "product SET variation = '1', status = '1' WHERE product_id = '" . (int)$product_id . "'");
+            }
+        }
 
 		if (isset($data['variations_display'])) {
 		    $this->db->query("UPDATE " . DB_PREFIX . "category SET variations_display = '" . $data['variations_display'] . "' WHERE category_id = '" . (int)$category_id . "'");
@@ -1193,6 +1209,18 @@ $_['text_content_middle'] = 'Content Center';
     <file path="admin/controller/catalog/product.php">
         <operation>
             <search><![CDATA[
+            public function index() {
+            ]]></search>
+            <add position="after"><![CDATA[
+        //mod
+        $this->document->addScript('view/javascript/extra.js');
+        $this->document->addStyle('/catalog/view/javascript/jquery/magnific/magnific-popup.css');
+        $this->document->addScript('/catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
+        //mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
 		    $data['delete'] = $this->url->link('catalog/product/delete', 'token=' . $this->session->data['token'] . $url, true);
             ]]></search>
             <add position="after"><![CDATA[
@@ -1210,6 +1238,8 @@ $_['text_content_middle'] = 'Content Center';
         //mod
 		$data['button_enable'] = $this->language->get('button_enable');
         $data['button_disable'] = $this->language->get('button_disable');
+
+        $data['text_create_parent_product'] = $this->language->get('text_create_parent_product');
         //mod
             ]]></add>
         </operation>
@@ -1911,6 +1941,7 @@ $_['text_content_middle'] = 'Content Center';
             <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
             ]]></search>
             <add position="before"><![CDATA[
+        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-default" onclick="createParentProduct('<?php echo $token ?>'); "><?php echo $text_create_parent_product ?></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $enabled; ?>').submit()"><i class="fa fa-play"></i></button>
 		<button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $disabled; ?>').submit()"><i class="fa fa-pause"></i></button>
             ]]></add>
