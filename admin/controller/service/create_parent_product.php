@@ -110,9 +110,7 @@ class ControllerServiceCreateParentProduct extends Controller {
 
             if (!empty($product)) {
                 if (!$data['category_name_example']) {
-                    $manufacturer = $this->model_catalog_manufacturer->getManufacturer($product['manufacturer_id']);
-
-                    $data['category_name_example'] = (!empty($manufacturer) ? $manufacturer['name'] . " " : "" ) . $product['name'];
+                    $data['category_name_example'] = $product['name'];
                 }
 
                 $data['products_related'][] = $product;
