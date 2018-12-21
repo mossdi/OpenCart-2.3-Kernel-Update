@@ -311,10 +311,10 @@ $(document).ready(function() {
 	});
 });
 
-//Popup Login
+//Popup Logout
 function AjaxLogout() {
     $.ajax({
-        url: 'index.php?route=account/logout_ajax/logout',
+        url: 'index.php?route=account/login_ajax/logout',
         beforeSend: function () {
             $('#preloader').fadeIn().show();
         },
@@ -329,7 +329,7 @@ function getPopupLogin() {
     $.magnificPopup.open({
         tLoading: '<img src="image/preload/ring-alt.svg"/>',
         items: {
-            src: 'index.php?route=account/login_ajax',
+            src: 'index.php?route=account/login_ajax/login',
             type: 'ajax'
         }
     });
@@ -340,7 +340,7 @@ function getPopupView(product_id) {
     $.magnificPopup.open({
         tLoading: '<img src="image/preload/ring-alt.svg"/>',
         items: {
-            src: 'index.php?route=common/popup_view&product_id='+product_id,
+            src: 'index.php?route=common/popup_view&product_id=' + product_id,
             type: 'ajax'
         }
     });

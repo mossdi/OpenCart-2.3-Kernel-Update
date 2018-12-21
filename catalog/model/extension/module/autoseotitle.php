@@ -87,26 +87,31 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
             } else {
                 $manufacturer_title = '';
             }
-            if (isset($this->request->get['min_price']) && isset($this->request->get['max_price'])) {
-                $price_gap_title = ' | ' . $this->language->get('text_from') . ' ' . $this->currency->format($this->request->get['min_price'], $this->session->data['currency']) . ' ' . $this->language->get('text_to') . ' ' . $this->currency->format($this->request->get['max_price'], $this->session->data['currency']);
-            } else {
-                $price_gap_title = '';
-            }
             if (isset($this->request->get['in_stock']) && $this->request->get['in_stock'] == true ) {
                 $in_stock_title = ' | ' . $this->language->get('entry_in_stock');
             } else {
                 $in_stock_title = '';
             }
-            if ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'p.price') && (isset($this->request->get['order']) && $this->request->get['order'] == 'DESC')) {
+            if (isset($this->request->get['min_price']) && isset($this->request->get['max_price'])) {
+                $price_gap_title = ' | ' . $this->language->get('text_from') . ' ' . $this->currency->format($this->request->get['min_price'], $this->session->data['currency']) . ' ' . $this->language->get('text_to') . ' ' . $this->currency->format($this->request->get['max_price'], $this->session->data['currency']);
+            } else {
+                $price_gap_title = '';
+            }
+            if (isset($this->request->get['attribute_filter'])) {
+                $attribute_title = ' | ' . implode(" / ", $this->request->get['attribute_filter']) ;
+            } else {
+                $attribute_title = '';
+            }
+            if ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'price') && (isset($this->request->get['order']) && $this->request->get['order'] == 'DESC')) {
                 $sort_price_title = ' | ' . $this->language->get('text_sort') . ' ' . $this->language->get('text_price_desc');
-            } elseif ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'p.price') && (isset($this->request->get['order']) && $this->request->get['order'] == 'ASC')) {
+            } elseif ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'price') && (isset($this->request->get['order']) && $this->request->get['order'] == 'ASC')) {
                 $sort_price_title = ' | ' . $this->language->get('text_sort') . ' ' .  $this->language->get('text_price_asc');
             } else {
                 $sort_price_title = '';
             }
-            if ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'cd.name') && (isset($this->request->get['order']) && $this->request->get['order'] == 'DESC')) {
+            if ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'name') && (isset($this->request->get['order']) && $this->request->get['order'] == 'DESC')) {
                 $sort_name_title = ' | ' . $this->language->get('text_sort') . ' ' . $this->language->get('text_name_desc');
-            } elseif ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'cd.name') && (isset($this->request->get['order']) && $this->request->get['order'] == 'ASC')) {
+            } elseif ((isset($this->request->get['sort']) && $this->request->get['sort'] == 'name') && (isset($this->request->get['order']) && $this->request->get['order'] == 'ASC')) {
                 $sort_name_title = ' | ' . $this->language->get('text_sort') . ' ' .  $this->language->get('text_name_asc');
             } else {
                 $sort_name_title = '';
@@ -124,8 +129,9 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
 
             $sort_title = array(
                 'manufacturer_title' => $manufacturer_title,
-                'price_gap_title'    => $price_gap_title,
                 'in_stock_title'     => $in_stock_title,
+                'price_gap_title'    => $price_gap_title,
+                'attribute_title'    => $attribute_title,
                 'sort_price_title'   => $sort_price_title,
                 'sort_name_title'    => $sort_name_title,
                 'limit_title'        => $limit_title,

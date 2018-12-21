@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>shoputils_antispam_contact</code>
+	<name>Антиспам формы обратной связи</name>
+	<version>1.0</version>
+	<author>Shoputils</author>
+    <link>https://opencart.market</link>
+
+    <file path="catalog/controller/information/contact.php">
+        <operation error="skip">
+            <search><![CDATA[
+            private $error = array();
+            ]]></search>
+            <add position="after"><![CDATA[
+    //Antispam.Contact Begin
+    private $log;
+    private static $LOG_OFF = 0;
+    private static $LOG_SPAM = 1;
+    private static $LOG_FULL = 2;
+
+    protected function logWrite($message, $type) {
+        switch ($this->config->get('module_shoputils_antispam_contact_log')) {
+            case self::$LOG_OFF:
+                return;
+            case self::$LOG_SPAM:
+                if ($type == self::$LOG_FULL) {
+                    return;
+                }
+        }
+
+        if (!$this->log) {
+            $this->log = new Log($this->config->get('module_shoputils_antispam_contact_log_filename'));
+        }
+
+        $this->log->Write($message);
+    }
+    //Antispam.Contact End
+            ]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[
+            protected function validate() {
+            ]]></search>
+            <add position="after"><![CDATA[
+        //Antispam.Contact Begin
+        if ($this->config->get('module_shoputils_antispam_contact_status')) {
+            if (isset($this->request->post['submit'])) {
+                $this->logWrite('SPAM DETECTED! Mail not send!', self::$LOG_SPAM);
+                $this->logWrite('  POST:' . var_export($this->request->post, true), self::$LOG_SPAM);
+                $this->logWrite('  GET:' . var_export($this->request->get, true), self::$LOG_SPAM);
+                $this->response->redirect('error/not_found');
+            } else {
+                $this->logWrite('  POST:' . var_export($this->request->post, true), self::$LOG_FULL);
+                $this->logWrite('  GET:' . var_export($this->request->get, true), self::$LOG_FULL);
+            }
+        }
+        //Antispam.Contact End
+          ]]></add>
+        </operation>
+    </file>
+
+</modification>

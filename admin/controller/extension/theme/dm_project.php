@@ -683,6 +683,9 @@ class ControllerExtensionThemeDMProject extends Controller {
         //Product to category
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_to_category` ADD `main_category` TINYINT(1) NOT NULL DEFAULT '0' AFTER `category_id`");
 
+        //banner_image
+        $this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `description` TEXT  CHARACTER SET utf8 COLLATE utf8_general_ci AFTER `title`");
+
         //Catalog
         $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "catalog` (
                             `catalog_display` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
@@ -778,6 +781,9 @@ class ControllerExtensionThemeDMProject extends Controller {
 
         //Product to category
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_to_category` DROP COLUMN `main_category`");
+
+        //banner_image
+        $this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` DROP COLUMN `description`");
 
         //Catalog
         $this->db->query("DROP TABLE `" . DB_PREFIX . "catalog`");

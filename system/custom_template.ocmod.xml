@@ -3570,6 +3570,22 @@ $_['text_service']      = 'Help';
         </operation>
         <operation>
             <search><![CDATA[
+            $sort = 'p.sort_order';
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            $sort = 'p.quantity'; //mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $order = 'ASC';
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            $order = 'DESC'; //mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
             $data['text_limit'] = $this->language->get('text_limit');
             ]]></search>
             <add position="after"><![CDATA[
@@ -3614,7 +3630,19 @@ $_['text_service']      = 'Help';
 
                 $data['parents_categories'] = array();
 
-                $parents_categories = $this->model_catalog_parent_product->getParentInfoManufacturerProductsAnyType($manufacturer_id);
+                $manufacturer_category_limit = 5;
+
+                $filter_data = array(
+                    'filter_manufacturer_id' => $manufacturer_id,
+                    'filter_in_stock'        => $in_stock,
+                    'filter_min_price'       => $min_price,
+                    'filter_max_price'       => $max_price,
+                    'start'                  => ($page - 1) * $manufacturer_category_limit,
+                    'limit'                  => $manufacturer_category_limit,
+                );
+
+                $parents_categories = $this->model_catalog_parent_product->getParentInfoManufacturerProductsAnyType($filter_data);
+                $parents_categories_total = $this->model_catalog_parent_product->getTotalParentInfoManufacturerProductsAnyType($filter_data);
 
                 if ($parents_categories) {
                     $filter_data = array(
@@ -3625,25 +3653,22 @@ $_['text_service']      = 'Help';
                         'sort'                   => $sort,
                         'order'                  => $order
                     );
-                
+
                     foreach ($parents_categories as $parent_category) {
                         $filter_data['filter_category_id'] = $parent_category['id']; //add $filter_data element
 
-                        if (isset($this->request->get['category_id']) && $this->request->get['category_id'] == $parent_category['id']) {
-                            $results = $this->model_catalog_parent_product->getProductsAnyType($filter_data);
+                        $results = $this->model_catalog_parent_product->getProductsAnyType($filter_data);
 
-                            $products_any_type = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products_manufacturer', $results, $category_info = false, $url, $in_stock, $data, $filter_data);
-                        } else {
-                            $products_any_type = [];
+                        $products_any_type = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products_manufacturer', $results, $category_info = false, $url, $in_stock, $data, $filter_data);
+
+                        if ($products_any_type) {
+                            $data['parents_categories'][] = array(
+                                'name'          => $parent_category['name'],
+                                'link'          => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer_id . '&category_id=' . $parent_category['id'])  . '#' . $parent_category['id'],
+                                'category_id'   => $parent_category['id'],
+                                'products'      => $products_any_type
+                            );
                         }
-
-
-                        $data['parents_categories'][] = array(
-                            'name'          => $parent_category['name'],
-                            'link'          => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer_id . '&category_id=' . $parent_category['id'])  . '#' . $parent_category['id'],
-                            'category_id'   => $parent_category['id'],
-                            'products'      => $products_any_type
-                        );
                     }
                 }
 
@@ -3777,7 +3802,28 @@ $_['text_service']      = 'Help';
             <add position="replace" offset="21"><![CDATA[
             //mod
             if ($manufacturer_info['manufacturer_display']) {
-			    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
+                $pagination = new Pagination();
+                $pagination->total = $parents_categories_total;
+                $pagination->page = $page;
+                $pagination->limit = $manufacturer_category_limit;
+                $pagination->url = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] .  $url . implode('', array_values($url_filter)) . '&page={page}');
+
+                $data['pagination'] = $pagination->render();
+
+                $data['results'] = sprintf($this->language->get('text_pagination'), ($parents_categories_total) ? (($page - 1) * $manufacturer_category_limit) + 1 : 0, ((($page - 1) * $manufacturer_category_limit) > ($parents_categories_total - $manufacturer_category_limit)) ? $parents_categories_total : ((($page - 1) * $manufacturer_category_limit) + $manufacturer_category_limit), $parents_categories_total, ceil($parents_categories_total / $manufacturer_category_limit));
+
+                // http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
+                if ($page == 1) {
+                    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'canonical');
+                } elseif ($page == 2) {
+                    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'], true), 'prev');
+                } else {
+                    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page - 1), true), 'prev');
+                }
+
+                if ($limit && ceil($product_total / $limit) > $page) {
+                    $this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page='. ($page + 1), true), 'next');
+                }
 			} else {
 			    $pagination = new Pagination();
 			    $pagination->total = $product_total;
@@ -3811,7 +3857,12 @@ $_['text_service']      = 'Help';
             ]]></search>
             <add position="after"><![CDATA[
             //mod
-            $data['url'] = html_entity_decode($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url), ENT_QUOTES, 'UTF-8');
+            $url_filter = array(
+                'min_filter_price'    => $min_filter_price,
+                'max_filter_price'    => $max_filter_price
+            );
+
+            $data['url'] = html_entity_decode($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . implode('', array_values($url_filter))), ENT_QUOTES, 'UTF-8');
             $data['in_stock'] = $in_stock;
             //mod
             ]]></add>
@@ -4033,6 +4084,14 @@ $_['text_service']      = 'Help';
             ]]></search>
             <add position="replace" trim="true"><![CDATA[
             $url . implode('', array_values($url_filter)) . '&limit=' . $value) //mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $url . '&page={page}');
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            $url . implode('', array_values($url_filter)) . '&page={page}'); //mod
             ]]></add>
         </operation>
         <operation>

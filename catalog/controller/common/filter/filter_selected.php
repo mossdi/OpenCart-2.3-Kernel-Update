@@ -22,11 +22,14 @@ class ControllerCommonFilterFilterSelected extends Controller {
             if (isset($get_data['manufacturer_id']) && $get_data['route'] != 'product/manufacturer/info') {
                 array_push($data['filters_selected'], $this->language->get('text_manufacturer') . ' ' . $this->model_catalog_manufacturer->getManufacturer($get_data['manufacturer_id'])['name']);
             }
+            if (isset($get_data['in_stock']) && $get_data['in_stock'] == true ) {
+                array_push($data['filters_selected'], $this->language->get('entry_in_stock'));
+            }
             if (isset($get_data['min_price']) && isset($get_data['max_price'])) {
                 array_push($data['filters_selected'], $this->language->get('text_from') . ' ' . $this->currency->format($get_data['min_price'], $this->session->data['currency']) . ' ' . $this->language->get('text_to') . ' ' . $this->currency->format($get_data['max_price'], $this->session->data['currency']));
             }
-            if (isset($get_data['in_stock']) && $get_data['in_stock'] == true ) {
-                array_push($data['filters_selected'], $this->language->get('entry_in_stock'));
+            if (isset($get_data['attribute_filter'])) {
+                array_push($data['filters_selected'], implode(" / " , $get_data['attribute_filter']));
             }
             if ((isset($get_data['sort']) && $get_data['sort'] == 'price') && (isset($get_data['order']) && $get_data['order'] == 'DESC')) {
                 array_push($data['filters_selected'], $this->language->get('text_sort') . ' ' . $this->language->get('text_price_desc'));
@@ -40,9 +43,6 @@ class ControllerCommonFilterFilterSelected extends Controller {
             }
             if (isset($get_data['limit'])) {
                 array_push($data['filters_selected'], $this->language->get('text_limit') . ' ' . $get_data['limit']);
-            }
-            if (isset($get_data['attribute_filter'])) {
-                array_push($data['filters_selected'], implode(" / " , $get_data['attribute_filter']));
             }
         }
 
