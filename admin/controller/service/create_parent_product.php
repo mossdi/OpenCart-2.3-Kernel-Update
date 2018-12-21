@@ -81,6 +81,9 @@ class ControllerServiceCreateParentProduct extends Controller {
         $data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
         $data['entry_related'] = $this->language->get('entry_related');
         $data['entry_store'] = $this->language->get('entry_store');
+        $data['entry_keyword'] = $this->language->get('entry_keyword');
+
+        $data['help_keyword'] = $this->language->get('help_keyword');
 
         $data['languages'] = $this->model_localisation_language->getLanguages();
 
