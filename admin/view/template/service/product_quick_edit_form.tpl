@@ -26,6 +26,7 @@
                                         <label class="col-sm-2 control-label" for="input-name<?php echo $language['language_id']; ?>"><?php echo $entry_name; ?></label>
                                         <div class="col-sm-10">
                                             <input type="text" name="product_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name<?php echo $language['language_id']; ?>" class="form-control" />
+                                            <input type="button" class="btn btn-success insert-manufacturer-name" value="INSERT MANUFACTURER NAME" data-language-id="<?php echo $language['language_id']; ?>" style="margin-top: 5px;" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -67,6 +68,7 @@
                                 <label class="col-sm-2 control-label" for="input-model"><?php echo $entry_model; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="model" value="<?php echo $model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
+                                    <input type="button" class="btn btn-success" id="sku-copy-to-model" value="COPY FROM SKU" style="margin-top: 5px;" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -187,6 +189,11 @@
 <script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
 <script type="text/javascript"><!--
     $('#language a:first').tab('show');
+
+    $('#sku-copy-to-model').click(function () {
+        var sku = $('#popup-quick-edit-product input[name=\'sku\']').val();
+        $('#popup-quick-edit-product input[name=\'model\']').val(sku);
+    });
 
     $('#popup-quick-edit-product').on('click', '#btn-save', function () {
         $.ajax({
@@ -398,4 +405,27 @@
             getSeoUrlGenerator(nameContent, 1);
         }
     });
+//--></script>
+<script type="text/javascript"><!--
+    $("input.insert-manufacturer-name").click(function () {
+        var language_id = $(this).data('language-id');
+        insertTextAtCursor(document.getElementById('input-name' + language_id), '<?php echo $manufacturer; ?>', 0);
+    });
+
+    function insertTextAtCursor(el, text, offset) {
+        var val = el.value, endIndex, range, doc = el.ownerDocument;
+
+        if (typeof el.selectionStart == "number"
+            && typeof el.selectionEnd == "number") {
+            endIndex = el.selectionEnd;
+            el.value = val.slice(0, endIndex) + text + val.slice(endIndex);
+            el.selectionStart = el.selectionEnd = endIndex + text.length+(offset?offset:0);
+        } else if (doc.selection != "undefined" && doc.selection.createRange) {
+            el.focus();
+            range = doc.selection.createRange();
+            range.collapse(false);
+            range.text = text;
+            range.select();
+        }
+    }
 //--></script>
