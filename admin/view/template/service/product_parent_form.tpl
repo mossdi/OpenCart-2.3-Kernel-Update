@@ -31,22 +31,19 @@
                                             <?php } ?>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div style="display: none;" class="form-group">
                                         <label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>
                                         <div class="col-sm-10">
                                             <textarea name="category_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" class="form-control summernote"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['description'] : ''; ?></textarea>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
+                                    <div style="display: none;" class="form-group">
                                         <label class="col-sm-2 control-label" for="input-add-description<?php echo $language['language_id']; ?>"><?php echo $entry_add_description; ?></label>
                                         <div class="col-sm-10">
                                             <textarea name="category_description[<?php echo $language['language_id']; ?>][add_description]" placeholder="<?php echo $entry_add_description; ?>" id="input-add-description<?php echo $language['language_id']; ?>" class="form-control summernote"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['add_description'] : ''; ?></textarea>
                                         </div>
                                     </div>
-
-
-                                    <div class="form-group">
+                                    <div style="display: none;" class="form-group">
                                         <label class="col-sm-2 control-label" for="input-meta-title<?php echo $language['language_id']; ?>"><?php echo $entry_meta_title; ?></label>
 
                                         <div class="col-sm-10">
@@ -56,13 +53,13 @@
                                             <?php } ?>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div style="display: none;" class="form-group">
                                         <label class="col-sm-2 control-label" for="input-meta-description<?php echo $language['language_id']; ?>"><?php echo $entry_meta_description; ?></label>
                                         <div class="col-sm-10">
                                             <textarea name="category_description[<?php echo $language['language_id']; ?>][meta_description]" rows="5" placeholder="<?php echo $entry_meta_description; ?>" id="input-meta-description<?php echo $language['language_id']; ?>" class="form-control"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div style="display: none;" class="form-group">
                                         <label class="col-sm-2 control-label" for="input-meta-keyword<?php echo $language['language_id']; ?>"><?php echo $entry_meta_keyword; ?></label>
                                         <div class="col-sm-10">
                                             <textarea name="category_description[<?php echo $language['language_id']; ?>][meta_keyword]" rows="5" placeholder="<?php echo $entry_meta_keyword; ?>" id="input-meta-keyword<?php echo $language['language_id']; ?>" class="form-control"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea>
