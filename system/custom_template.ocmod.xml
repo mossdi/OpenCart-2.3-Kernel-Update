@@ -1213,7 +1213,7 @@ $_['text_content_middle'] = 'Content Center';
             ]]></search>
             <add position="after"><![CDATA[
         //mod
-        $this->document->addScript('view/javascript/extra.js');
+        $this->document->addScript('view/javascript/service.js');
         $this->document->addStyle('/catalog/view/javascript/jquery/magnific/magnific-popup.css');
         $this->document->addScript('/catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
         //mod
@@ -1269,7 +1269,7 @@ $_['text_content_middle'] = 'Content Center';
             'status'     => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
             ]]></search>
             <add position="replace" trim="true"><![CDATA[
-            'status'     => $result['status'] ? '<i class="fa fa-play"></i> ' . $this->language->get('text_enabled') : '<i class="fa fa-pause"></i> '  . $this->language->get('text_disabled'),
+            'status'     => $result['status'] ? '<i class="fa fa-play"></i>' : '<i class="fa fa-pause"></i>',
             ]]></add>
         </operation>
         <operation>
@@ -1968,6 +1968,17 @@ $_['text_content_middle'] = 'Content Center';
         </operation>
         <operation>
             <search><![CDATA[
+            <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+            ]]></search>
+            <add position="replace"><![CDATA[
+                  <td class="text-right" nowrap>
+                    <a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary" onclick="event.preventDefault(); quickEditProduct('<?php echo $product['product_id']; ?>', '<?php echo $token; ?>')"><i class="fa fa-search" aria-hidden="true"></i></a>
+                    <a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                  </td>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
             $('#button-filter').on('click', function() {
             ]]></search>
             <add position="before"><![CDATA[
@@ -1999,19 +2010,19 @@ $('#form-product input[type=\'checkbox\']').change(function () {
             <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
             ]]></search>
             <add position="before" offset="1"><![CDATA[
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-thumb-width"><?php echo $entry_thumb_size; ?></label>
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <input type="text" name="thumb_width" value="<?php echo $thumb_width; ?>" placeholder="<?php echo $entry_width; ?>" id="input-thumb-width" class="form-control" />
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" name="thumb_height" value="<?php echo $thumb_height; ?>" placeholder="<?php echo $entry_height; ?>" id="input-thumb-height" class="form-control" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-thumb-width"><?php echo $entry_thumb_size; ?></label>
+                  <div class="col-sm-10">
+                      <div class="row">
+                          <div class="col-sm-6">
+                              <input type="text" name="thumb_width" value="<?php echo $thumb_width; ?>" placeholder="<?php echo $entry_width; ?>" id="input-thumb-width" class="form-control" />
+                          </div>
+                          <div class="col-sm-6">
+                              <input type="text" name="thumb_height" value="<?php echo $thumb_height; ?>" placeholder="<?php echo $entry_height; ?>" id="input-thumb-height" class="form-control" />
+                          </div>
+                      </div>
+                  </div>
+              </div>
             ]]></add>
         </operation>
         <operation>

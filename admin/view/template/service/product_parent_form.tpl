@@ -261,7 +261,7 @@
 
         if (lastSeoUrl == '') {
             $( "input[name='category_description[" + configLanguageId + "][name]']" ).change(function() {
-                getSeoUrlGenerator(this.value,0);
+                getSeoUrlGenerator(this.value, 0);
             });
         }
     });
@@ -278,7 +278,7 @@
         return response;
     }
 
-    $( "#SEO_URL_GENERATOR" ).click(function() {
+    $("#SEO_URL_GENERATOR").click(function() {
         var configLanguageId = getConfigLanguageId();
         var nameContent = $( "input[name='category_description[" + configLanguageId + "][name]']" ).val();
         if (nameContent == '') {

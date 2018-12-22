@@ -121,6 +121,6 @@ class ControllerServiceCreateParentProduct extends Controller {
 
         $data['category_store'] = array(0);
 
-        $this->response->setOutput($this->load->view('catalog/product_parent_form', $data));
+        $this->response->setOutput($this->load->view('service/product_parent_form', $data));
     }
 }
