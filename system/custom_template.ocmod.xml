@@ -1941,7 +1941,7 @@ $_['text_content_middle'] = 'Content Center';
             <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
             ]]></search>
             <add position="before"><![CDATA[
-        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-default" onclick="createParentProduct('<?php echo $token ?>'); "><?php echo $text_create_parent_product ?></button>
+        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-success btn-create-parent" onclick="createParentProduct('<?php echo $token ?>'); "><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $text_create_parent_product ?></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $enabled; ?>').submit()"><i class="fa fa-play"></i></button>
 		<button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $disabled; ?>').submit()"><i class="fa fa-pause"></i></button>
             ]]></add>
@@ -1964,6 +1964,22 @@ $_['text_content_middle'] = 'Content Center';
                   <td class="text-center">
                     <?php echo $product['variation'] ? '<i class="fa fa-check-square-o" aria-hidden="true"></i>' : ''; ?>
                   </td>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $('#button-filter').on('click', function() {
+            ]]></search>
+            <add position="before"><![CDATA[
+$('#form-product input[type=\'checkbox\']').change(function () {
+  var selected = $('#form-product').serialize();
+
+  if (selected !== "") {
+    $('button.btn-create-parent').css('display', 'block');
+  } else {
+    $('button.btn-create-parent').css('display', 'none');
+  }
+});
             ]]></add>
         </operation>
     </file>

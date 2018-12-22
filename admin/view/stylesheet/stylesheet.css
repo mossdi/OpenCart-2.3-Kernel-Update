@@ -665,3 +665,16 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 #popup-create-parent-product .panel {
 	margin-bottom: 0 !important;
 }
+
+/* buttons */
+.btn-create-parent {
+	display: none;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	z-index: 2;
+}
+
+.btn-create-parent .fa {
+	color: red;
+}
