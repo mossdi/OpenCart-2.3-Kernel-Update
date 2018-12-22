@@ -1113,9 +1113,15 @@ $_['text_content_middle'] = 'Content Center';
                 $attribute_display = $this->model_catalog_attribute->getAttribute($result['attribute_display']);
             }
 
+            $this->load->model('catalog/product');
+
+            $productsCount = $this->model_catalog_product->getTotalProducts(['filter_category_id' => $result['category_id']]);
+
+            $textProductCount = $productsCount == 0 ? '<span style="color: red; font-weight: bold">(' . $productsCount . ')</span>' : '(' . $productsCount . ')';
+
 			$output[$result['category_id']] = array(
 				'category_id'       => $result['category_id'],
-				'name'              => $name,
+				'name'              => $name . ($result['product_display'] ? ' ' . $textProductCount : null),
                 'template_category' => $result['category_display'],
                 'template_products' => $result['products_display'],
                 'template_product'  => $result['product_display'],
