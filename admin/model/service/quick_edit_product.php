@@ -82,6 +82,8 @@ class ModelServiceQuickEditProduct extends Model {
                 WHERE product_id = '" . (int)$product_id . "'"
             );
         } elseif (isset($data['product_category'][0])) {
+            $this->load->model('catalog/product');
+
             $this->db->query(
                 "UPDATE " . DB_PREFIX . "product_to_category SET
                 main_category    = '1'

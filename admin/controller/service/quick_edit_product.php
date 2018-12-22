@@ -25,8 +25,6 @@ class ControllerServiceQuickEditProduct extends Controller {
         if (!$json['warning']) {
             $this->load->model('service/quick_edit_product');
 
-
-
             $this->model_service_quick_edit_product->editProduct($product_id, $product_data);
         }
 
