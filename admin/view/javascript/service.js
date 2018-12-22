@@ -10,3 +10,12 @@ function createParentProduct(token) {
         }
     });
 }
+
+function quickEditProduct(product_id, token) {
+    $.magnificPopup.open({
+        items: {
+            src: 'index.php?route=service/quick_edit_product/index&product_id=' + product_id + '&token=' + token,
+            type: 'ajax'
+        }
+    });
+}

@@ -651,7 +651,8 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 }
 
 /* popup */
-#popup-create-parent-product {
+#popup-create-parent-product,
+#popup-quick-edit-product {
 	background: #fff;
 	max-width: 90%;
 	width: 70%;
@@ -662,7 +663,8 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	border-radius: 2px;
 }
 
-#popup-create-parent-product .panel {
+#popup-create-parent-product .panel,
+#popup-quick-edit-product .panel {
 	margin-bottom: 0 !important;
 }
 
