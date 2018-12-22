@@ -16,24 +16,60 @@ class ControllerServiceQuickEditProduct extends Controller {
     public function save() {
         $product_data = array();
 
+        $product_id = $this->request->post['product_id'];
+
         parse_str(html_entity_decode($this->request->post['data']), $product_data);
 
-        $json['warning'] = $this->validate($product_data);
+        $json['warning'] = $this->validate($product_id, $product_data);
 
         if (!$json['warning']) {
             $this->load->model('service/quick_edit_product');
 
 
 
-            $this->model_service_quick_edit_product->editProduct($this->request->post['product_id'], $product_data);
+            $this->model_service_quick_edit_product->editProduct($product_id, $product_data);
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    private function validate($data = array()) {
-        return false;
+    private function validate($product_id, $data = array()) {
+        $result = false;
+
+        if (!$this->user->hasPermission('modify', 'catalog/product')) {
+            $result = true;
+        }
+
+        foreach ($data['product_description'] as $language_id => $value) {
+            if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 255)) {
+                $result = true;
+            }
+
+            if (utf8_strlen($value['meta_title']) > 255) {
+                $result = true;
+            }
+        }
+
+        if ((utf8_strlen($data['model']) < 1) || (utf8_strlen($data['model']) > 64)) {
+            $result = true;
+        }
+
+        if (utf8_strlen($data['keyword']) > 0) {
+            $this->load->model('catalog/url_alias');
+
+            $url_alias_info = $this->model_catalog_url_alias->getUrlAlias($data['keyword']);
+
+            if ($url_alias_info && isset($product_id) && $url_alias_info['query'] != 'product_id=' . $product_id) {
+                $result = true;
+            }
+
+            if ($url_alias_info && !isset($product_id)) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 
     private function getForm() {

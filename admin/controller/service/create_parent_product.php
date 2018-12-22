@@ -35,6 +35,10 @@ class ControllerServiceCreateParentProduct extends Controller {
     private function validate($data = array()) {
         $result = false;
 
+        if (!$this->user->hasPermission('modify', 'catalog/product')) {
+            $result = true;
+        }
+
         if (empty($data['product_related'])) {
             $result = true;
         }
