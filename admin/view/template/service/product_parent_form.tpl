@@ -26,9 +26,6 @@
                                         <label class="col-sm-2 control-label" for="input-name<?php echo $language['language_id']; ?>"><?php echo $entry_name; ?></label>
                                         <div class="col-sm-10">
                                             <input type="text" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo $category_name_example; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name<?php echo $language['language_id']; ?>" class="form-control" />
-                                            <?php if (isset($error_name[$language['language_id']])) { ?>
-                                            <div class="text-danger"><?php echo $error_name[$language['language_id']]; ?></div>
-                                            <?php } ?>
                                         </div>
                                     </div>
                                     <div style="display: none;" class="form-group">
@@ -48,9 +45,6 @@
 
                                         <div class="col-sm-10">
                                             <input type="text" name="category_description[<?php echo $language['language_id']; ?>][meta_title]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_title'] : ''; ?>" placeholder="<?php echo $entry_meta_title; ?>" id="input-meta-title<?php echo $language['language_id']; ?>" class="form-control" />
-                                            <?php if (isset($error_meta_title[$language['language_id']])) { ?>
-                                            <div class="text-danger"><?php echo $error_meta_title[$language['language_id']]; ?></div>
-                                            <?php } ?>
                                         </div>
                                     </div>
                                     <div style="display: none;" class="form-group">
@@ -75,6 +69,7 @@
                                 <div class="col-sm-10">
                                     <input type="text" name="path" value="" placeholder="<?php echo $entry_parent; ?>" id="input-parent" class="form-control" />
                                     <input type="hidden" name="parent_id" value="0" />
+                                    <div class="alert alert-info" style="margin-top: 5px;">Example name - <?php echo $category_name_example; ?></div>
                                 </div>
                             </div>
                             <div class="form-group">
