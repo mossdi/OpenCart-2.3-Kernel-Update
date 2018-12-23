@@ -2780,6 +2780,7 @@ $_['text_service']      = 'Help';
         //mod
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/parent_product');
+        $this->load->model('service/view_builder');
 
         $this->load->model('tool/image');
 
@@ -2959,7 +2960,7 @@ $_['text_service']      = 'Help';
                 $results_total = $this->model_catalog_parent_product->getTotalProductsAnyType($filter_data);
 
                 if ($results) {
-                    $data['products_any_type'] = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products_category', $results, $category_info, $url, $in_stock, $data, $filter_data);
+                    $data['products_any_type'] = $this->model_service_view_builder->getProductsAnyTypeView($products_type = 'products_category', $results, $category_info, $url, $in_stock, $data, $filter_data);
                 } else {
                     $data['products_any_type'] = false;
                 }
@@ -3302,6 +3303,7 @@ $_['text_service']      = 'Help';
             ]]></search>
             <add position="after"><![CDATA[
 		$this->load->model('catalog/parent_product'); //mod
+		$this->load->model('service/view_builder'); //mod
             ]]></add>
         </operation>
         <operation>
@@ -3391,7 +3393,7 @@ $_['text_service']      = 'Help';
                 }
 
                 if ($results) {
-                    $data['product_variants'] = $this->model_catalog_parent_product->getProductVariantsView($product_id, $results, $category_info);
+                    $data['product_variants'] = $this->model_service_view_builder->getProductVariantsView($product_id, $results, $category_info);
                 } else {
                     $data['product_variants'] = false;
                 }
@@ -3596,6 +3598,7 @@ $_['text_service']      = 'Help';
             <add position="after"><![CDATA[
         //mod
         $this->load->model('catalog/parent_product');
+        $this->load->model('service/view_builder');
 
         $this->document->addStyle('catalog/view/javascript/jquery/slick/slick.css');
 		$this->document->addStyle('catalog/view/javascript/jquery/slick/slick-theme.css');
@@ -3723,7 +3726,7 @@ $_['text_service']      = 'Help';
 
                         $results = $this->model_catalog_parent_product->getProductsAnyType($filter_data);
 
-                        $products_any_type = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products_manufacturer', $results, $category_info = false, $url, $in_stock, $data, $filter_data);
+                        $products_any_type = $this->model_service_view_builder->getProductsAnyTypeView($products_type = 'products_manufacturer', $results, $category_info = false, $url, $in_stock, $data, $filter_data);
 
                         if ($products_any_type) {
                             $data['parents_categories'][] = array(
@@ -3958,6 +3961,7 @@ $_['text_service']      = 'Help';
         //mod
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/parent_product');
+        $this->load->model('service/view_builder');
 
         $this->load->model('tool/image');
 
@@ -4065,7 +4069,7 @@ $_['text_service']      = 'Help';
         $results_total = $this->model_catalog_parent_product->getTotalSpecialProductsAnyType($filter_data);
 
         if ($results) {
-            $data['special_products'] = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products_special', $results, $category_info = false, $url, $in_stock = true, $data, $filter_data);
+            $data['special_products'] = $this->model_service_view_builder->getProductsAnyTypeView($products_type = 'products_special', $results, $category_info = false, $url, $in_stock = true, $data, $filter_data);
         } else {
             $data['special_products'] = false;
         }
