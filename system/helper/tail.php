@@ -34,5 +34,3 @@ function tail($filename,$lines_view) {
 	fclose($open_file);
 	return $lines;
 }
-
-?>
