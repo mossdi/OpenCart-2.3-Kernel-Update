@@ -669,12 +669,17 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 }
 
 /* buttons */
-.btn-create-parent {
+.product-menu-bottom.fixed {
 	display: none;
+	max-width: 100%;
 	position: fixed;
-	bottom: 10px;
-	right: 10px;
-	z-index: 2;
+	bottom: 0;
+	padding: 10px;
+	border: 1px solid #e8e8e8;
+	border-bottom: 0;
+	border-radius: 0 5px 0 0;
+	background: #fff;
+	z-index: 10;
 }
 
 .btn-create-parent .fa {

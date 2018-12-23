@@ -1944,6 +1944,14 @@ $_['text_content_middle'] = 'Content Center';
     <file path="admin/view/template/catalog/product_list.tpl">
         <operation>
             <search><![CDATA[
+            <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            <div class="product-menu-bottom fixed"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
             <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
             ]]></search>
             <add position="before"><![CDATA[
@@ -1992,9 +2000,9 @@ $('#form-product input[type=\'checkbox\']').change(function () {
   var selected = $('#form-product').serialize();
 
   if (selected !== "") {
-    $('button.btn-create-parent').css('display', 'block');
+    $('.product-menu-bottom.fixed').css('display', 'block');
   } else {
-    $('button.btn-create-parent').css('display', 'none');
+    $('.product-menu-bottom.fixed').css('display', 'none');
   }
 });
             ]]></add>
