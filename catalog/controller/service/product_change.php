@@ -1,5 +1,5 @@
 <?php
-class ControllerProductProductChange extends Model {
+class ControllerServiceProductChange extends Model {
     public function changeProductCard() {
         $this->load->model('catalog/product');
 
