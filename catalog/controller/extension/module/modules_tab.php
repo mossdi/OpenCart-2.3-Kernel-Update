@@ -42,6 +42,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
         $this->load->model('catalog/category');
         $this->load->model('catalog/parent_product');
         $this->load->model('catalog/manufacturer');
+        $this->load->model('service/view_builder');
         $this->load->model('tool/image');
 
         $module_info['products_display'] = $setting['products_display'];
@@ -66,7 +67,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
                 }
             }
 
-            $data['featured_products'] = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products', $featured_products, $module_info, $url = '', $in_stock = true, $data, array());
+            $data['featured_products'] = $this->model_service_view_builder->getProductsAnyTypeView($products_type = 'products', $featured_products, $module_info, $url = '', $in_stock = true, $data, array());
         } else {
             $data['featured_products'] = false;
         }
@@ -86,7 +87,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
 
             $special_products = $this->model_catalog_parent_product->getSpecialProductsAnyType($special_filter);
 
-            $data['special_products'] = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products_special', $special_products, $module_info, $url = '', $in_stock = true, $data, $special_filter);
+            $data['special_products'] = $this->model_service_view_builder->getProductsAnyTypeView($products_type = 'products_special', $special_products, $module_info, $url = '', $in_stock = true, $data, $special_filter);
         } else {
             $data['special_products'] = false;
         }
@@ -106,7 +107,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
 
             $latest_products = $this->model_catalog_parent_product->getLatestProductsAnyType($latest_filter);
 
-            $data['latest_products'] = $this->model_catalog_parent_product->getProductsAnyTypeView($products_type = 'products', $latest_products, $module_info, $url = '', $in_stock = true, $data, $latest_filter);
+            $data['latest_products'] = $this->model_service_view_builder->getProductsAnyTypeView($products_type = 'products', $latest_products, $module_info, $url = '', $in_stock = true, $data, $latest_filter);
         } else {
             $data['latest_products'] = false;
         }
