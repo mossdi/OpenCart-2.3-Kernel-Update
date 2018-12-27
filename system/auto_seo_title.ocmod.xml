@@ -33,7 +33,12 @@
 				$this->model_extension_module_autoseotitle->setCategory($category_info);
 			}
 
-			if (isset($this->request->get['attribute_filter']) || isset($this->request->get['sort']) || isset($this->request->get['order']) || isset($this->request->get['limit']) || isset($this->request->get['filter']) || isset($this->request->get['manufacturer_id']) || isset($this->request->get['in_stock']) || isset($this->request->get['page'])) {
+			if (isset($this->request->get['attribute_filter']) || isset($this->request->get['sort']) ||
+			    isset($this->request->get['order']) || isset($this->request->get['limit']) ||
+			    isset($this->request->get['filter']) || isset($this->request->get['manufacturer_id']) ||
+			    isset($this->request->get['in_stock']) || isset($this->request->get['page']) ||
+			    isset($this->request->get['min_price']) || isset($this->request->get['max_price'])
+			) {
         	    $this->document->setDescription('');
         	    $this->document->setKeywords('');
 
@@ -58,7 +63,11 @@
 				$this->model_extension_module_autoseotitle->setManufacturer($manufacturer_info);
 			}
 
-        	if (isset($this->request->get['sort']) || isset($this->request->get['order']) || isset($this->request->get['limit']) || isset($this->request->get['filter']) || isset($this->request->get['in_stock']) || isset($this->request->get['page'])) {
+        	if (isset($this->request->get['sort']) || isset($this->request->get['order']) ||
+        		isset($this->request->get['limit']) || isset($this->request->get['filter']) ||
+        		isset($this->request->get['in_stock']) || isset($this->request->get['page']) ||
+        		isset($this->request->get['min_price']) || isset($this->request->get['max_price'])
+        	) {
         	    $this->document->setDescription('');
         	    $this->document->setKeywords('');
 
