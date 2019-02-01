@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>[Mod] DM Project Library</name>
+    <code>dm_project_library</code>
+    <version>2.3</version>
+    <author>by DiMoss</author>
+    <link>http://forum.opencart-russia.ru/members/dimoss.3919/</link>
+
+    <!-- ======================================= //SYSTEM// ======================================= -->
+
+    <!-- SYSTEM - Library - Document -->
+
+    <file path="system/library/document.php">
+        <operation>
+            <search><![CDATA[
+            $this->links[$href] = array(
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            $this->links[$href . '_' . $rel] = array( //mod
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- SYSTEM - Library - Cart -->
+
+    <file path="system/library/cart/cart.php">
+        <operation>
+            <search><![CDATA[
+            $product_special_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+            ]]></search>
+            <add position="replace"><![CDATA[
+            //mod
+            $product_special_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND (logged = '0' OR logged = '" . ($this->customer->isLogged() ? 1 : 0) . "') AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+            //mod
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- SYSTEM - Library - Log -->
+
+    <file path="system/library/log.php">
+        <operation>
+            <search><![CDATA[
+            fwrite($this->handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
+            ]]></search>
+            <add position="replace"><![CDATA[
+        //mod
+        $message_url = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+        fwrite($this->handle, date('Y-m-d G:i:s') . '::' . $message_url . ' - ' . print_r($message, true) . "\n");
+        //mod
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- SYSTEM - Library - Url -->
+
+    <file path="system/library/url.php">
+        <operation>
+            <search><![CDATA[
+            public function link($route, $args = '', $secure = false) {
+            ]]></search>
+            <add position="before"><![CDATA[
+    public function linkToCatalog($route, $args = '', $secure = false) {
+        $cleanedURL = str_replace("admin/", "", ($secure && $this->ssl ? $this->ssl : $this->url));
+
+        $url = $cleanedURL . 'index.php?route=' . $route;
+
+        if ($args) {
+            if (is_array($args)) {
+                $url .= '&amp;' . http_build_query($args);
+            } else {
+                $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+            }
+        }
+
+        foreach ($this->rewrite as $rewrite) {
+            $url = $rewrite->rewrite($url);
+        }
+
+        return $url;
+    }
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- ======================================= //END SYSTEM// ======================================= -->
+</modification>

@@ -25,7 +25,13 @@ class ControllerServiceCreateParentProduct extends Controller {
             $category_data['sort_order'] = 0;
             $category_data['status']     = 1;
 
-            $this->model_catalog_category->addCategory($category_data);
+            $category_id = $this->model_catalog_category->addCategory($category_data);
+
+            $categoryURL = $this->url->linkToCatalog('product/category', 'path=' . $category_id);
+
+            $textSuccess = "Category added - <a href=" . $categoryURL ." target=\"_blank\">" . $categoryURL . "</a>";
+
+            $this->session->data['success'] = $textSuccess;
         }
 
         $this->response->addHeader('Content-Type: application/json');
