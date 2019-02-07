@@ -26,6 +26,13 @@ class ControllerServiceQuickEditProduct extends Controller {
             $this->load->model('service/quick_edit_product');
 
             $this->model_service_quick_edit_product->editProduct($product_id, $product_data);
+
+            $productURL = $this->url->linkToCatalog('product/product', 'product_id=' . $product_id);
+
+            $textSuccess = "Product edited - <a href=" . $productURL ." target=\"_blank\">" . $productURL . "</a> - " .
+                "<strong>( +1 )</strong>";
+
+            $this->session->data['success'] = $textSuccess;
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -34,6 +41,34 @@ class ControllerServiceQuickEditProduct extends Controller {
 
     private function validate($product_id, $data = array()) {
         $result = false;
+
+        $attributes_required = $this->config->get('dm_project_attributes_required');
+
+        if (!empty($attributes_required)) {
+            $requiredAttributeIsEmpty   = false;
+            $product_attribute_post_ids = array();
+
+            foreach ($data['product_attribute'] as $product_attribute_post) {
+                $product_attribute_post_ids[] = $product_attribute_post['attribute_id'];
+            }
+
+            foreach ($attributes_required as $attribute_required_id) {
+                if (!in_array($attribute_required_id, $product_attribute_post_ids)) {
+                    $requiredAttributeIsEmpty = true;
+                    break;
+                }
+            }
+
+            if (empty($data['product_attribute']) || $requiredAttributeIsEmpty) {
+                $this->load->model('catalog/attribute');
+
+                $result = "Required Attributes:";
+
+                foreach ($attributes_required as $attribute_required_id) {
+                    $result .= " " . $this->model_catalog_attribute->getAttribute($attribute_required_id)['name'] . ";";
+                }
+            }
+        }
 
         if (!$this->user->hasPermission('modify', 'catalog/product')) {
             $result = true;

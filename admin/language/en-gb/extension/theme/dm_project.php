@@ -65,6 +65,7 @@ $_['entry_payment_receiver_kpp']           = 'Payment receiver KPP';
 $_['entry_payment_receiver_address']       = 'Payment receiver legal address';
 $_['entry_attribute_filters']        	   = 'Attribute filters';
 $_['entry_attribute_filters_explode']      = 'Attribute filters for explode';
+$_['entry_attribute_required']             = 'Required attributes';
 
 // Help
 $_['help_directory'] 	               = 'This field is only to enable older themes to be compatible with the new theme system. You can set the theme directory to use on the image size settings defined here.';

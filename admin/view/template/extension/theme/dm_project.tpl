@@ -95,6 +95,21 @@
                                     </div>
                                 </div>
                             </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-attribute-required"><?php echo $entry_attribute_required; ?></span></label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="attribute_required" value="" placeholder="<?php echo $entry_attribute_required; ?>" id="input-attribute-required" class="form-control" />
+                                        <div id="attribute-required" class="well well-sm" style="height: 150px; overflow: auto;">
+                                            <?php foreach ($attributes_required as $attribute) { ?>
+                                            <div id="attribute-required<?php echo $attribute['attribute_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $attribute['name']; ?>
+                                                <input type="hidden" name="dm_project_attributes_required[]" value="<?php echo $attribute['attribute_id']; ?>" />
+                                            </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                         <div id="filters" class="tab-pane fade">
                             <fieldset>
@@ -676,6 +691,32 @@ $('input[name=\'attribute_filter_explode\']').autocomplete({
     }
 });
 $('#attribute-filter-explode').delegate('.fa-minus-circle', 'click', function() {
+    $(this).parent().remove();
+});
+
+$('input[name=\'attribute_required\']').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?route=catalog/attribute/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        category: item.attribute_group,
+                        label:    item.name,
+                        value:    item.attribute_id
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+        $('input[name=\'attribute_required\']').val('');
+        $('#attribute-required' + item['value']).remove();
+        $('#attribute-required').append('<div id="attribute-required' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="dm_project_attributes_required[]" value="' + item['value'] + '" /></div>');
+    }
+});
+$('#attribute-required').delegate('.fa-minus-circle', 'click', function() {
     $(this).parent().remove();
 });
 //--></script>

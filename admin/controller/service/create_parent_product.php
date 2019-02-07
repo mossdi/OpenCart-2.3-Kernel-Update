@@ -20,6 +20,7 @@ class ControllerServiceCreateParentProduct extends Controller {
 
         if (!$json['warning']) {
             $this->load->model('catalog/category');
+            $this->load->model('catalog/product');
 
             $category_data['column']     = 1;
             $category_data['sort_order'] = 0;
@@ -29,7 +30,8 @@ class ControllerServiceCreateParentProduct extends Controller {
 
             $categoryURL = $this->url->linkToCatalog('product/category', 'path=' . $category_id);
 
-            $textSuccess = "Category added - <a href=" . $categoryURL ." target=\"_blank\">" . $categoryURL . "</a>";
+            $textSuccess = "Category added - <a href=" . $categoryURL ." target=\"_blank\">" . $categoryURL . "</a> - " .
+                "<strong>( " . $this->model_catalog_product->getTotalProducts(['filter_category_id' => $category_id]) . " )</strong>";
 
             $this->session->data['success'] = $textSuccess;
         }

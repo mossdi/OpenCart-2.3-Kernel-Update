@@ -73,6 +73,7 @@ class ControllerExtensionThemeDMProject extends Controller {
         $data['entry_map_latitude'] = $this->language->get('entry_map_latitude');
         $data['entry_attribute_filters'] = $this->language->get('entry_attribute_filters');
         $data['entry_attribute_filters_explode'] = $this->language->get('entry_attribute_filters_explode');
+        $data['entry_attribute_required'] = $this->language->get('entry_attribute_required');
 
         $data['entry_add_attachment'] = $this->language->get('entry_add_attachment');
         $data['entry_payment_receiver_name'] = $this->language->get('entry_payment_receiver_name');
@@ -520,6 +521,23 @@ class ControllerExtensionThemeDMProject extends Controller {
 
                 if ($attribute_info) {
                     $data['attribute_filters_explode'][] = array(
+                        'attribute_id' => $attribute_info['attribute_id'],
+                        'name'         => $attribute_info['name']
+                    );
+                }
+            }
+        }
+
+        $data['attributes_required'] = array();
+
+        $attributes_required = $this->config->get('dm_project_attributes_required');
+
+        if ($attributes_required) {
+            foreach ($attributes_required as $attribute_id) {
+                $attribute_info = $this->model_catalog_attribute->getAttribute($attribute_id);
+
+                if ($attribute_info) {
+                    $data['attributes_required'][] = array(
                         'attribute_id' => $attribute_info['attribute_id'],
                         'name'         => $attribute_info['name']
                     );
