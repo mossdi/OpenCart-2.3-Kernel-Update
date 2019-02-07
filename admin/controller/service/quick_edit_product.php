@@ -27,12 +27,14 @@ class ControllerServiceQuickEditProduct extends Controller {
 
             $this->model_service_quick_edit_product->editProduct($product_id, $product_data);
 
-            $productURL = $this->url->linkToCatalog('product/product', 'product_id=' . $product_id);
+            if ($product_data['status']) {
+                $productURL = $this->url->linkToCatalog('product/product', 'product_id=' . $product_id);
 
-            $textSuccess = "Product edited - <a href=" . $productURL ." target=\"_blank\">" . $productURL . "</a> - " .
-                "<strong>( +1 )</strong>";
+                $textSuccess = "Product edited - <a href=" . $productURL . " target=\"_blank\">" . $productURL . "</a> - " .
+                    "<strong>( +1 )</strong>";
 
-            $this->session->data['success'] = $textSuccess;
+                $this->session->data['success'] = $textSuccess;
+            }
         }
 
         $this->response->addHeader('Content-Type: application/json');
