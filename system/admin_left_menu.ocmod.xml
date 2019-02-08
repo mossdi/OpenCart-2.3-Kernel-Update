@@ -16,11 +16,37 @@ $_['text_cdek_shipping']              = 'Заявки';
 $_['text_cdek_setting']               = 'Настройки';
 $_['text_cdek_integrator']            = 'СДЭК-Интегратор';
 $_['text_xml_dispatcher']             = 'Диспетчер YML\XML';
+$_['text_catalog']                    = 'Каталог';
+$_['text_landing_pages']              = 'Посадочные страницы';
       ]]></add>
         </operation>
     </file>
 
     <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[
+            $catalog = array();
+            ]]></search>
+            <add position="after"><![CDATA[
+            //mod
+            if ($this->user->hasPermission('access', 'catalog/catalog')) {
+                $catalog[] = array(
+                    'name'	   => $this->language->get('text_catalog'),
+                    'href'     => $this->url->link('catalog/catalog', 'token=' . $this->session->data['token'], true),
+                    'children' => array()
+                );
+            }
+
+            if ($this->user->hasPermission('access', 'catalog/landing_pages')) {
+                $catalog[] = array(
+                    'name'	   => $this->language->get('text_landing_pages'),
+                    'href'     => $this->url->link('catalog/landing_pages', 'token=' . $this->session->data['token'], true),
+                    'children' => array()
+                );
+            }
+            //mod
+            ]]></add>
+        </operation>
         <operation>
             <search><![CDATA[
             // Catalog
