@@ -1,5 +1,5 @@
 <?php
-class ControllerCatalogLandingPages extends Controller
+class ControllerCatalogLandingPage extends Controller
 {
     private $error = array();
 

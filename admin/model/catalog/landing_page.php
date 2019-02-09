@@ -1,5 +1,5 @@
 <?php
-class ModelCatalogLandingPages extends Model {
+class ModelCatalogLandingPage extends Model {
     public function getLandingPages($data = array()) {
         $language_id = $this->config->get('config_admin_language');
 
