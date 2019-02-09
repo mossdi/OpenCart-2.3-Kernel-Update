@@ -39,6 +39,8 @@ function changeProductCard(product_id, active) {
 
                 $('h1.h1-product-title').html(json['heading-title']);
 
+                $('#product-specification .product-name #product-model').html(json['model']);
+
                 $('.product-info').html(json['info']);
 
                 $('div#product-images div.slider').html(json['images']);

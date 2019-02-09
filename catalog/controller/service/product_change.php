@@ -38,7 +38,6 @@ class ControllerServiceProductChange extends Controller {
             $info['text_tags'] = $this->language->get('text_tags');
 
             $info['recurrings'] = $this->model_catalog_product->getProfiles($product_id);
-            $info['model'] = $product_info['model'];
             $info['manufacturer'] = $product_info['manufacturer'];
             $info['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
             $info['reward'] = $product_info['reward'];
@@ -379,6 +378,8 @@ class ControllerServiceProductChange extends Controller {
 
             $json['heading-title'] = $product_info['name'];
             $json['link'] = $this->url->link('product/product&product_id=' . $product_id);
+
+            $json['model'] = $product_info['model'];
 
             $json['images'] = $this->load->view('z_blocks/json/card_product_images', $images);
             $json['info'] = $this->load->view('z_blocks/json/card_product_info', $info);
