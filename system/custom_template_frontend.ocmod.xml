@@ -1031,8 +1031,18 @@ $_['text_service']      = 'Help';
             <search><![CDATA[
             if ($product_info['quantity'] <= 0) {
             ]]></search>
-            <add position="before"><![CDATA[
+            <add position="replace" offset="6"><![CDATA[
 		    $data['stock_qty'] = $product_info['quantity']; //mod
+
+		    $data['stock'] = '<strong>' . $this->language->get('text_stock') . '</strong> ';
+
+		    if ($product_info['quantity'] <= 0) {
+				$data['stock'] .= $product_info['stock_status'];
+			} elseif ($this->config->get('config_stock_display')) {
+				$data['stock'] .= $product_info['quantity'];
+			} else {
+				$data['stock'] .= $this->language->get('text_instock');
+			}
 			]]></add>
         </operation>
         <operation>
