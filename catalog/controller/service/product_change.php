@@ -381,10 +381,10 @@ class ControllerServiceProductChange extends Controller {
 
             $json['model'] = $product_info['model'];
 
-            $json['images'] = $this->load->view('z_blocks/product/card_product_images', $images);
-            $json['info'] = $this->load->view('z_blocks/product/card_product_info', $info);
-            $json['related'] = $this->load->view('z_blocks/product/card_product_related', $related);
-            $json['nav_tabs'] = $this->load->view('z_blocks/product/card_product_nav_tabs', $nav_tabs);
+            $json['images'] = $this->load->view('z_blocks/product/product_card_images', $images);
+            $json['info'] = $this->load->view('z_blocks/product/product_card_info', $info);
+            $json['related'] = $this->load->view('z_blocks/product/product_card_related', $related);
+            $json['nav_tabs'] = $this->load->view('z_blocks/product/product_card_nav_tabs', $nav_tabs);
             //END JSON
         }
 
