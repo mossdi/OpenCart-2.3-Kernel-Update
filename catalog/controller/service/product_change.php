@@ -496,7 +496,7 @@ class ControllerServiceProductChange extends Controller {
                 $json['percent'] = '';
             }
 
-            $json['info'] = $this->load->view('z_blocks/json/category_product_info', $info);
+            $json['info'] = $this->load->view('z_blocks/product/category_product_info', $info);
             //End JSON
         }
 
