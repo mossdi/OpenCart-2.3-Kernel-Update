@@ -1377,6 +1377,46 @@ $_['text_content_middle'] = 'Content Center';
     //mod
             ]]></add>
         </operation>
+        <operation>
+            <search><![CDATA[
+            foreach ($this->request->post['product_description'] as $language_id => $value) {
+            ]]></search>
+            <add position="before"><![CDATA[
+        //mod
+        $attributes_required = $this->config->get('dm_project_attributes_required');
+
+        if (!empty($attributes_required)) {
+            $requiredAttributeIsEmpty   = false;
+            $product_attribute_post_ids = array();
+
+            if (!empty($this->request->post['product_attribute'])) {
+                foreach ($this->request->post['product_attribute'] as $product_attribute_post) {
+                    $product_attribute_post_ids[] = $product_attribute_post['attribute_id'];
+                }
+
+                foreach ($attributes_required as $attribute_required_id) {
+                    if (!in_array($attribute_required_id, $product_attribute_post_ids)) {
+                        $requiredAttributeIsEmpty = true;
+                        break;
+                    }
+                }
+            } else {
+                $requiredAttributeIsEmpty = true;
+            }
+
+            if ($requiredAttributeIsEmpty) {
+                $this->load->model('catalog/attribute');
+
+                $this->error['warning'] = "Required Attributes:";
+
+                foreach ($attributes_required as $attribute_required_id) {
+                    $this->error['warning'] .= " " . $this->model_catalog_attribute->getAttribute($attribute_required_id)['name'] . ";";
+                }
+            }
+        }
+        //mod
+            ]]></add>
+        </operation>
     </file>
 
     <!-- 3. SETTING CONTROLLER (Admin-panel) -->

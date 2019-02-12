@@ -50,18 +50,22 @@ class ControllerServiceQuickEditProduct extends Controller {
             $requiredAttributeIsEmpty   = false;
             $product_attribute_post_ids = array();
 
-            foreach ($data['product_attribute'] as $product_attribute_post) {
-                $product_attribute_post_ids[] = $product_attribute_post['attribute_id'];
-            }
-
-            foreach ($attributes_required as $attribute_required_id) {
-                if (!in_array($attribute_required_id, $product_attribute_post_ids)) {
-                    $requiredAttributeIsEmpty = true;
-                    break;
+            if (!empty($data['product_attribute'])) {
+                foreach ($data['product_attribute'] as $product_attribute_post) {
+                    $product_attribute_post_ids[] = $product_attribute_post['attribute_id'];
                 }
+
+                foreach ($attributes_required as $attribute_required_id) {
+                    if (!in_array($attribute_required_id, $product_attribute_post_ids)) {
+                        $requiredAttributeIsEmpty = true;
+                        break;
+                    }
+                }
+            } else {
+                $requiredAttributeIsEmpty = true;
             }
 
-            if (empty($data['product_attribute']) || $requiredAttributeIsEmpty) {
+            if ($requiredAttributeIsEmpty) {
                 $this->load->model('catalog/attribute');
 
                 $result = "Required Attributes:";
