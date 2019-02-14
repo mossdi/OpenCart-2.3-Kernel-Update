@@ -17,7 +17,15 @@ class ModelCatalogLandingPage extends Model {
 
         foreach ($data['landing_description'] as $language_id => $value) {
             $this->db->query("INSERT INTO " . DB_PREFIX . "landing_page_description
-                              SET landing_id = '" . (int)$landing_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+                              SET landing_id = '" . (int)$landing_id . "', 
+                              language_id = '" . (int)$language_id . "', 
+                              `name` = '" . $this->db->escape($value['name']) . "', 
+                              title = '" . $this->db->escape($value['title']) . "', 
+                              description = '" . $this->db->escape($value['description']) . "',
+                              meta_title = '" . $this->db->escape($value['meta_title']) . "', 
+                              meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                              meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'"
+            );
         }
     }
 
@@ -44,7 +52,15 @@ class ModelCatalogLandingPage extends Model {
 
         foreach ($data['landing_description'] as $language_id => $value) {
             $this->db->query("INSERT INTO " . DB_PREFIX . "landing_page_description
-                              SET landing_id = '" . (int)$landing_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+                              SET landing_id = '" . (int)$landing_id . "', 
+                              language_id = '" . (int)$language_id . "', 
+                              `name` = '" . $this->db->escape($value['name']) . "', 
+                              title = '" . $this->db->escape($value['title']) . "',
+                              description = '" . $this->db->escape($value['description']) . "', 
+                              meta_title = '" . $this->db->escape($value['meta_title']) . "', 
+                              meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                              meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'"
+            );
         }
     }
 
@@ -68,6 +84,7 @@ class ModelCatalogLandingPage extends Model {
         foreach ($query->rows as $result) {
             $landing_description_data[$result['language_id']] = array(
                 'name'             => $result['name'],
+                'title'            => $result['title'],
                 'meta_title'       => $result['meta_title'],
                 'meta_description' => $result['meta_description'],
                 'meta_keyword'     => $result['meta_keyword'],

@@ -266,6 +266,11 @@ class ControllerCatalogLandingPage extends Controller
         $data['text_none'] = $this->language->get('text_none');
 
         $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_title'] = $this->language->get('entry_title');
+        $data['entry_description'] = $this->language->get('entry_description');
+        $data['entry_meta_title'] = $this->language->get('entry_meta_title');
+        $data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
+        $data['entry_meta_description'] = $this->language->get('entry_meta_description');
         $data['entry_category'] = $this->language->get('entry_category');
         $data['entry_attribute'] = $this->language->get('entry_attribute');
         $data['entry_manufacturer'] = $this->language->get('entry_manufacturer');
@@ -283,6 +288,18 @@ class ControllerCatalogLandingPage extends Controller
             $data['error_name'] = $this->error['name'];
         } else {
             $data['error_name'] = '';
+        }
+
+        if (isset($this->error['title'])) {
+            $data['error_title'] = $this->error['title'];
+        } else {
+            $data['error_title'] = '';
+        }
+
+        if (isset($this->error['meta_title'])) {
+            $data['error_meta_title'] = $this->error['meta_title'];
+        } else {
+            $data['error_meta_title'] = '';
         }
 
         if (isset($this->error['category'])) {
@@ -416,8 +433,16 @@ class ControllerCatalogLandingPage extends Controller
         }
 
         foreach ($this->request->post['landing_description'] as $language_id => $value) {
-            if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 255)) {
+            if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 64)) {
                 $this->error['name'][$language_id] = $this->language->get('error_name');
+            }
+
+            if ((utf8_strlen($value['title']) < 3) || (utf8_strlen($value['title']) > 64)) {
+                $this->error['title'][$language_id] = $this->language->get('error_title');
+            }
+
+            if ((utf8_strlen($value['meta_title']) > 255)) {
+                $this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
             }
         }
 
