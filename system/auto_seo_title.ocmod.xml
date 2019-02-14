@@ -33,7 +33,13 @@
 				$this->model_extension_module_autoseotitle->setCategory($category_info, $landing_page);
 			}
 
-			if (((isset($this->request->get['attribute_filter']) || isset($this->request->get['manufacturer_id'])) && !$landing_page) ||
+			// Если страница посадочная и для нее указан атрибут - он удаляется из массива $this->request->get
+            // Смотреть в методе чуть выше - $this->model_extension_module_autoseotitle->setCategory
+
+			$landing_page_manufacturer_id = !empty($landing_page['landing_description']['manufacturer_id']) ? $landing_page['landing_description']['manufacturer_id'] : NULL;
+
+			if (!empty($this->request->get['attribute_filter']) ||
+                (isset($this->request->get['manufacturer_id']) && $this->request->get['manufacturer_id'] != $landing_page_manufacturer_id) ||
 			    isset($this->request->get['order']) || isset($this->request->get['limit']) ||
                 isset($this->request->get['sort'])  || isset($this->request->get['filter']) ||
 			    isset($this->request->get['in_stock']) || isset($this->request->get['page']) ||
@@ -46,7 +52,6 @@
         	    $data['add_description'] = false;
         	}
 			//Autoseotitle
-
 			]]></add>
 		</operation>
 	</file>
