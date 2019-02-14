@@ -71,18 +71,18 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
     }
 
     //Category page
-    public function setCategory($category_info = array()) {
+    public function setCategory($category_info = array(), $landing_page = array()) {
         $seo_title = (array)$this->config->get('autoseotitle_category');
         if (isset($seo_title[$this->config->get('config_language_id')]) && $seo_title[$this->config->get('config_language_id')]) {
             $pattern = array(
-                '[name]'        => $category_info['name'],
-                '[meta_h1]'     => isset($category_info['meta_h1'])?$category_info['meta_h1']?$category_info['meta_h1']:$category_info['name']:'',
+                '[name]'        => $landing_page ? $landing_page['landing_description']['title'] : $category_info['name'],
+                '[meta_h1]'     => isset($category_info['meta_h1']) ? $category_info['meta_h1'] ? $category_info['meta_h1'] : $category_info['name']:'',
                 '[meta_title]'  => $category_info['meta_title'],
                 '{filter}'      => isset($filter_ocfilter)?'{filter}':'',
                 '[store_name]'  => $this->config->get('config_name'),
             );
 
-            if (isset($this->request->get['manufacturer_id'])) {
+            if (isset($this->request->get['manufacturer_id']) && empty($landing_page['landing_description']['manufacturer_id'])) {
                 $manufacturer_title = ' | ' . $this->language->get('text_manufacturer') . ' ' . $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id'])['name'];
             } else {
                 $manufacturer_title = '';
@@ -97,7 +97,12 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
             } else {
                 $price_gap_title = '';
             }
-            if (isset($this->request->get['attribute_filter'])) {
+
+            if (!empty($landing_page['landing_description']['attribute_id'])) {
+                unset($this->request->get['attribute_filter'][$landing_page['landing_description']['attribute_id']]);
+            }
+
+            if (!empty($this->request->get['attribute_filter'])) {
                 $attribute_title = ' | ' . implode(" / ", $this->request->get['attribute_filter']) ;
             } else {
                 $attribute_title = '';
@@ -151,14 +156,14 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
             }
 
             if ($this->config->get('autoseotitle_rewrite') || !$category_info['meta_title']) {
-                $this->document->setTitle(str_replace(array_keys($pattern), array_values($pattern), $seo_title[$this->config->get('config_language_id')]) . $add_page . implode('', array_values($sort_title)));
+                $this->document->setTitle(str_replace(array_keys($pattern), array_values($pattern), $seo_title[$this->config->get('config_language_id')]) . implode('', array_values($sort_title)) . $add_page);
             }
         }
 
         $seo_description = (array)$this->config->get('autoseotitle_descr_category');
         if (isset($seo_description[$this->config->get('config_language_id')]) && $seo_description[$this->config->get('config_language_id')]) {
             $pattern = array(
-                '[name]'        => $category_info['name'],
+                '[name]'        => $landing_page ? $landing_page['landing_description']['title'] : $category_info['name'],
                 '[meta_h1]'     => isset($category_info['meta_h1'])?$category_info['meta_h1']?$category_info['meta_h1']:$category_info['name']:'',
                 '{filter}'      => isset($filter_ocfilter)?'{filter}':'',
                 '[meta_title]'  => $category_info['meta_title'],
@@ -186,7 +191,7 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
         $seo_keyword = (array)$this->config->get('autoseotitle_keyw_category');
         if (isset($seo_keyword[$this->config->get('config_language_id')]) && $seo_keyword[$this->config->get('config_language_id')]) {
             $pattern = array(
-                '[name]'        => $category_info['name'],
+                '[name]'        => $landing_page ? $landing_page['landing_description']['title'] : $category_info['name'],
                 '[meta_h1]'     => isset($category_info['meta_h1'])?$category_info['meta_h1']?$category_info['meta_h1']:$category_info['name']:'',
                 '{filter}'      => isset($filter_ocfilter)?'{filter}':'',
                 '[meta_title]'  => $category_info['meta_title'],
@@ -205,7 +210,7 @@ class ModelExtensionModuleAutoSeoTitle extends Model {
             }
 
             if ($this->config->get('autoseotitle_keyw_rewrite') || !$category_info['meta_keyword']) {
-                $this->document->setKeywords(str_replace(array_keys($pattern),array_values($pattern),$seo_keyword[$this->config->get('config_language_id')]) . $add_page);
+                $this->document->setKeywords(str_replace(array_keys($pattern), array_values($pattern), $seo_keyword[$this->config->get('config_language_id')]) . $add_page);
             }
         }
     }
