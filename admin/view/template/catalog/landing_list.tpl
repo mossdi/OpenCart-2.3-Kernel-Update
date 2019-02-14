@@ -44,16 +44,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php if ($layouts) { ?>
-                            <?php foreach ($layouts as $layout) { ?>
+                            <?php if ($landing_pages) { ?>
+                            <?php foreach ($landing_pages as $landing_page) { ?>
                             <tr>
-                                <td class="text-center"><?php if (in_array($layout['layout_id'], $selected)) { ?>
-                                    <input type="checkbox" name="selected[]" value="<?php echo $layout['layout_id']; ?>" checked="checked" />
+                                <td class="text-center"><?php if (in_array($landing_page['landing_id'], $selected)) { ?>
+                                    <input type="checkbox" name="selected[]" value="<?php echo $landing_page['landing_id']; ?>" checked="checked" />
                                     <?php } else { ?>
-                                    <input type="checkbox" name="selected[]" value="<?php echo $layout['layout_id']; ?>" />
+                                    <input type="checkbox" name="selected[]" value="<?php echo $landing_page['landing_id']; ?>" />
                                     <?php } ?></td>
-                                <td class="text-left"><?php echo $layout['name']; ?></td>
-                                <td class="text-right"><a href="<?php echo $layout['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                <td class="text-left"><?php echo $landing_page['name']; ?></td>
+                                <td class="text-right"><a href="<?php echo $landing_page['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                             </tr>
                             <?php } ?>
                             <?php } else { ?>
