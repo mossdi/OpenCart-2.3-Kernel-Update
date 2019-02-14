@@ -452,8 +452,10 @@ class ControllerCatalogLandingPage extends Controller
                 $this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
             }
 
-            if ((utf8_strlen($value['attribute_value']) < 2)) {
-                $this->error['attribute_value'][$language_id] = $this->language->get('error_attribute_value');
+            if (!empty($this->request->post['attribute_id'])) {
+                if ((utf8_strlen($value['attribute_value']) < 2)) {
+                    $this->error['attribute_value'][$language_id] = $this->language->get('error_attribute_value');
+                }
             }
         }
 

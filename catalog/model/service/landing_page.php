@@ -14,6 +14,7 @@ class ModelServiceLandingPage extends Model {
                 mb_strtolower($landing_page['attribute_value']) == mb_strtolower($this->request->get['attribute_filter'][$landing_page['attribute_id']]) &&
                 (int)$landing_page['manufacturer_id'] == (int)$this->request->get['manufacturer_id']) {
                 $landing_page_description = $landing_page;
+                break;
             } elseif (!empty($this->request->get['attribute_filter'][$landing_page['attribute_id']]) &&
                 mb_strtolower($landing_page['attribute_value']) == mb_strtolower($this->request->get['attribute_filter'][$landing_page['attribute_id']]) &&
                 empty($landing_page['manufacturer_id'])) {
@@ -28,17 +29,17 @@ class ModelServiceLandingPage extends Model {
         if (!empty($landing_page_description)) {
             $canonical_url = "path=" . $category_id;
 
+            if ($landing_page_description['manufacturer_id']) {
+                $manufacturer_id = $landing_page_description['manufacturer_id'];
+
+                $canonical_url .= "&manufacturer_id=" . $manufacturer_id;
+            }
+
             if ($landing_page_description['attribute_id']) {
                 $attribute_filter_id    = $landing_page_description['attribute_id'];
                 $attribute_filter_value = $this->request->get['attribute_filter'][$attribute_filter_id];
 
                 $canonical_url .= "&attribute_filter[" . $attribute_filter_id . "]=" . $attribute_filter_value;
-            }
-
-            if ($landing_page_description['manufacturer_id']) {
-                $manufacturer_id = $landing_page_description['manufacturer_id'];
-
-                $canonical_url .= "&manufacturer_id=" . $manufacturer_id;
             }
 
             return array(
