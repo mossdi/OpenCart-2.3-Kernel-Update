@@ -491,6 +491,26 @@ $_['text_service']      = 'Help';
         </operation>
         <operation>
             <search><![CDATA[
+            $this->document->setTitle($category_info['meta_title']);
+            ]]></search>
+            <add position="before"><![CDATA[
+            //mod
+            $this->load->model('service/landing_page');
+
+            $landing_page = $this->model_service_landing_page->isLandingPage($category_info['category_id']);
+            //mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $data['heading_title'] = $category_info['name'];
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            $data['heading_title'] = $landing_page ? $landing_page['landing_description']['title'] : $category_info['name'];
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
             $data['text_limit'] = $this->language->get('text_limit');
             ]]></search>
             <add position="after"><![CDATA[
@@ -854,10 +874,6 @@ $_['text_service']      = 'Help';
             ]]></search>
             <add position="replace" offset="-9"><![CDATA[
             //mod
-            $this->load->model('service/landing_page');
-
-            $landing_page = $this->model_service_landing_page->isLandingPage($category_info['category_id']);
-
             $canonicalUrl = $landing_page ? $landing_page['landing_canonical'] : ('path=' . $category_info['category_id']);
 
             if ($page == 1) {
