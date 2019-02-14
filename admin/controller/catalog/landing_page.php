@@ -273,6 +273,7 @@ class ControllerCatalogLandingPage extends Controller
         $data['entry_meta_description'] = $this->language->get('entry_meta_description');
         $data['entry_category'] = $this->language->get('entry_category');
         $data['entry_attribute'] = $this->language->get('entry_attribute');
+        $data['entry_attribute_value'] = $this->language->get('entry_attribute_value');
         $data['entry_manufacturer'] = $this->language->get('entry_manufacturer');
 
         $data['button_save'] = $this->language->get('button_save');
@@ -300,6 +301,12 @@ class ControllerCatalogLandingPage extends Controller
             $data['error_meta_title'] = $this->error['meta_title'];
         } else {
             $data['error_meta_title'] = '';
+        }
+
+        if (isset($this->error['attribute_value'])) {
+            $data['error_attribute_value'] = $this->error['attribute_value'];
+        } else {
+            $data['error_attribute_value'] = '';
         }
 
         if (isset($this->error['category'])) {
@@ -443,6 +450,10 @@ class ControllerCatalogLandingPage extends Controller
 
             if ((utf8_strlen($value['meta_title']) > 255)) {
                 $this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
+            }
+
+            if ((utf8_strlen($value['attribute_value']) < 2)) {
+                $this->error['attribute_value'][$language_id] = $this->language->get('error_attribute_value');
             }
         }
 

@@ -26,6 +26,54 @@
       <div class="panel-body">
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-landing" class="form-horizontal">
           <fieldset>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="input-category"><?php echo $entry_category; ?></label>
+              <div class="col-sm-10">
+                <input type="text" name="category" value="" placeholder="<?php echo $entry_category; ?>" id="input-category" class="form-control" />
+                <div id="category" class="well well-sm" style="height: 60px; overflow: auto;">
+                  <?php if ($category) { ?>
+                  <div id="category<?php echo $category['category_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $category['name']; ?>
+                    <input type="hidden" name="category_id" value="<?php echo $category['category_id']; ?>" />
+                  </div>
+                  <?php } ?>
+                </div>
+                <?php if ($error_category) { ?>
+                <div class="text-danger"><?php echo $error_category; ?></div>
+                <?php } ?>
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="input-attribute"><?php echo $entry_attribute; ?></label>
+              <div class="col-sm-10">
+                <select name="attribute_id" id="input-attribute" class="form-control">
+                  <option value="0"><?php echo $text_none; ?></option>
+                  <?php foreach ($attributes as $attribute) { ?>
+                  <?php if ($attribute['attribute_id'] == $attribute_id) { ?>
+                  <option selected value="<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['attribute_name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['attribute_name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="input-attribute"><?php echo $entry_manufacturer; ?></label>
+              <div class="col-sm-10">
+                <select name="manufacturer_id" id="input-manufacturer" class="form-control">
+                  <option value="0"><?php echo $text_none; ?></option>
+                  <?php foreach ($manufacturers as $manufacturer) { ?>
+                  <?php if ($manufacturer['manufacturer_id'] == $manufacturer_id) { ?>
+                  <option selected value="<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
             <ul class="nav nav-tabs" id="language">
               <?php foreach ($languages as $language) { ?>
               <li><a href="#language<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
@@ -34,6 +82,15 @@
             <div class="tab-content">
               <?php foreach ($languages as $language) { ?>
               <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" for="input-attribute-value<?php echo $language['language_id']; ?>"><?php echo $entry_attribute_value; ?></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="landing_description[<?php echo $language['language_id']; ?>][attribute_value]" value="<?php echo isset($landing_description[$language['language_id']]) ? $landing_description[$language['language_id']]['attribute_value'] : ''; ?>" placeholder="<?php echo $entry_attribute_value; ?>" id="input-attribute-value<?php echo $language['language_id']; ?>" class="form-control" />
+                    <?php if (isset($error_attribute_value[$language['language_id']])) { ?>
+                    <div class="text-danger"><?php echo $error_attribute_value[$language['language_id']]; ?></div>
+                    <?php } ?>
+                  </div>
+                </div>
                 <div class="form-group required">
                   <label class="col-sm-2 control-label" for="input-name<?php echo $language['language_id']; ?>"><?php echo $entry_name; ?></label>
                   <div class="col-sm-10">
@@ -81,54 +138,6 @@
                 </div>
               </div>
               <?php } ?>
-            </div>
-          </fieldset>
-          <fieldset>
-            <div class="form-group required">
-              <label class="col-sm-2 control-label" for="input-category"><?php echo $entry_category; ?></label>
-              <div class="col-sm-10">
-                <input type="text" name="category" value="" placeholder="<?php echo $entry_category; ?>" id="input-category" class="form-control" />
-                <div id="category" class="well well-sm" style="height: 60px; overflow: auto;">
-                  <?php if ($category) { ?>
-                  <div id="category<?php echo $category['category_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $category['name']; ?>
-                    <input type="hidden" name="category_id" value="<?php echo $category['category_id']; ?>" />
-                  </div>
-                  <?php } ?>
-                </div>
-                <?php if ($error_category) { ?>
-                <div class="text-danger"><?php echo $error_category; ?></div>
-                <?php } ?>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-2 control-label" for="input-attribute"><?php echo $entry_attribute; ?></label>
-              <div class="col-sm-10">
-                <select name="attribute_id" id="input-attribute" class="form-control">
-                  <option value="0"><?php echo $text_none; ?></option>
-                  <?php foreach ($attributes as $attribute) { ?>
-                    <?php if ($attribute['attribute_id'] == $attribute_id) { ?>
-                      <option selected value="<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['attribute_name']; ?></option>
-                    <?php } else { ?>
-                      <option value="<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['attribute_name']; ?></option>
-                    <?php } ?>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-2 control-label" for="input-attribute"><?php echo $entry_manufacturer; ?></label>
-              <div class="col-sm-10">
-                <select name="manufacturer_id" id="input-manufacturer" class="form-control">
-                  <option value="0"><?php echo $text_none; ?></option>
-                  <?php foreach ($manufacturers as $manufacturer) { ?>
-                    <?php if ($manufacturer['manufacturer_id'] == $manufacturer_id) { ?>
-                      <option selected value="<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></option>
-                    <?php } else { ?>
-                      <option value="<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></option>
-                    <?php } ?>
-                  <?php } ?>
-                </select>
-              </div>
             </div>
           </fieldset>
         </form>
