@@ -29,7 +29,7 @@ class ModelServiceLandingPage extends Model {
             $canonical_url = "path=" . $category_id;
 
             if ($landing_page_description['attribute_id']) {
-                $attribute_filter_id = $landing_page_description['attribute_id'];
+                $attribute_filter_id    = $landing_page_description['attribute_id'];
                 $attribute_filter_value = $this->request->get['attribute_filter'][$attribute_filter_id];
 
                 $canonical_url .= "&attribute_filter[" . $attribute_filter_id . "]=" . $attribute_filter_value;
