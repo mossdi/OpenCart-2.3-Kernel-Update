@@ -854,18 +854,24 @@ $_['text_service']      = 'Help';
             ]]></search>
             <add position="replace" offset="-9"><![CDATA[
             //mod
+            $this->load->model('service/landing_page');
+
+            $landing_page = $this->model_service_landing_page->isLandingPage($category_info['category_id']);
+
+            $canonicalUrl = $landing_page ? $landing_page['landing_canonical'] : ('path=' . $category_info['category_id']);
+
             if ($page == 1) {
-                $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'], true), 'canonical');
+                $this->document->addLink($this->url->link('product/category', $canonicalUrl, true), 'canonical');
             } elseif ($page == 2) {
-                $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'], true), 'canonical');
-                $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'], true), 'prev');
+                $this->document->addLink($this->url->link('product/category', $canonicalUrl, true), 'canonical');
+                $this->document->addLink($this->url->link('product/category', $canonicalUrl, true), 'prev');
             } else {
-                $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'], true), 'canonical');
-                $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'] . '&page=' . ($page - 1), true), 'prev');
+                $this->document->addLink($this->url->link('product/category', $canonicalUrl, true), 'canonical');
+                $this->document->addLink($this->url->link('product/category', $canonicalUrl . '&page=' . ($page - 1), true), 'prev');
             }
 
             if ($limit && ceil($product_total / $limit) > $page) {
-                $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'] . '&page=' . ($page + 1), true), 'next'); //mod
+                $this->document->addLink($this->url->link('product/category', $canonicalUrl . '&page=' . ($page + 1), true), 'next'); //mod
             ]]></add>
         </operation>
         <operation>
