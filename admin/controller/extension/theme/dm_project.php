@@ -650,9 +650,7 @@ class ControllerExtensionThemeDMProject extends Controller {
         return !$this->error;
     }
 
-    /**
-     * Install / Uninstall
-     */
+    /** ==== Install / Uninstall ================================================================================== */
 
     public function install() {
         //Currency
@@ -719,6 +717,22 @@ class ControllerExtensionThemeDMProject extends Controller {
                             PRIMARY KEY (`language_id`)
                         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
+        //Manufacturer description
+        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "manufacturer_description` (
+                            `manufacturer_id` int(11) NOT NULL,
+                            `language_id` int(11) NOT NULL,
+                            `description` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            `meta_h1` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            `meta_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            `meta_description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            `meta_keyword` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            PRIMARY KEY (`manufacturer_id`,`language_id`)
+                        ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description (manufacturer_id, meta_h1)
+                          SELECT manufacturer_id, name FROM " . DB_PREFIX . "manufacturer 
+                          WHERE manufacturer_id NOT IN (SELECT manufacturer_id FROM " . DB_PREFIX . "manufacturer_description)");
+
         //Fast maintenance
         $this->load->model('user/user_group');
 
@@ -757,55 +771,7 @@ class ControllerExtensionThemeDMProject extends Controller {
 
     /*
     public function uninstall() {
-        //Category
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `search_related`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `search_regex`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `variations_height`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `variations_width`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `icon_height`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `icon_width`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `thumb_height`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `thumb_width`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `attribute_groups`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `attribute_display`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `variations_display`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `products_display`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `product_display`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `category_display`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category` DROP COLUMN `icon`");
-
-        //Category description
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` DROP COLUMN `add_description`");
-
-        //Product
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP COLUMN `thumb_height`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP COLUMN `thumb_width`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP COLUMN `attribute_groups`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP COLUMN `attribute_display`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP COLUMN `variation`");
-
-        //Manufacturers
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP COLUMN `thumb_height`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP COLUMN `thumb_width`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP COLUMN `manufacturer_display`");
-
-        //Information
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "information` DROP COLUMN `top`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "information` DROP COLUMN `product`");
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "information` DROP COLUMN `bottom_help`");
-
-        //Product special price
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_special` DROP COLUMN `logged`");
-
-        //Product to category
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_to_category` DROP COLUMN `main_category`");
-
-        //banner_image
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` DROP COLUMN `description`");
-
-        //Catalog
-        $this->db->query("DROP TABLE `" . DB_PREFIX . "catalog`");
-        $this->db->query("DROP TABLE `" . DB_PREFIX . "catalog_description`");
+        //DROP tables and columns
     }
     */
 }
