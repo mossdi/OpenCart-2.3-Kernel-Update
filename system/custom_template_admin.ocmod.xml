@@ -1965,6 +1965,16 @@ $_['text_content_middle'] = 'Content Center';
                   </td>
             ]]></add>
         </operation>
+
+        <operation>
+            <search><![CDATA[
+            <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            <td class="text-center" colspan="11"><?php echo $text_no_results; ?></td>
+            ]]></add>
+        </operation>
+
         <operation>
             <search><![CDATA[
             $('#button-filter').on('click', function() {
