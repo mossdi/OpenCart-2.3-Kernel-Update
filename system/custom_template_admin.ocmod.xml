@@ -1916,13 +1916,12 @@ $_['text_content_middle'] = 'Content Center';
             <div class="well">
             ]]></search>
             <add position="before"><![CDATA[
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#productFilter">
-              <i class="fa fa-filter" aria-hidden="true"></i> <?php echo $text_product_filter; ?>
-            </a>
-          </h4>
-        </div>
+        <h4 class="panel-title">
+          <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#productFilter">
+            <i class="fa fa-filter" aria-hidden="true"></i> <?php echo $text_product_filter; ?>
+          </a>
+        </h4>
+        <br>
         <div id="productFilter" class="panel-collapse collapse">
             ]]></add>
         </operation>
