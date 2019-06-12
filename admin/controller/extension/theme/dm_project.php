@@ -735,7 +735,7 @@ class ControllerExtensionThemeDMProject extends Controller {
 
         //Landing-pages
         $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "landing_page` (
-                            `landing_id` int(11) NOT NULL AUTOINCREMENT,
+                            `landing_id` int(11) NOT NULL AUTO_INCREMENT,
                             `category_id` int(11) NOT NULL,
                             `attribute_id` int(11),
                             `manufacturer_id` int(11),
