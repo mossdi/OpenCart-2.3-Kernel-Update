@@ -733,6 +733,28 @@ class ControllerExtensionThemeDMProject extends Controller {
                           SELECT manufacturer_id, name FROM " . DB_PREFIX . "manufacturer 
                           WHERE manufacturer_id NOT IN (SELECT manufacturer_id FROM " . DB_PREFIX . "manufacturer_description)");
 
+        //Landing-pages
+        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "landing_page` (
+                            `landing_id` int(11) NOT NULL AUTOINCREMENT,
+                            `category_id` int(11) NOT NULL,
+                            `attribute_id` int(11),
+                            `manufacturer_id` int(11),
+                            PRIMARY KEY (`landing_id`)
+                        ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+
+        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "landing_page_description` (
+                            `landing_id` int(11) NOT NULL,
+                            `language_id` int(11) NOT NULL,
+                            `name` varchar(255),
+                            `title` varchar(255),
+                            `attribute_value` varchar(255) NOT NULL,
+                            `description` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+                            `meta_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            `meta_description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            `meta_keyword` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                            PRIMARY KEY (`landing_id`, `language_id`)
+                        ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+
         //Fast maintenance
         $this->load->model('user/user_group');
 
