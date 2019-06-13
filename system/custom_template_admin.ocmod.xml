@@ -1898,7 +1898,10 @@ $_['text_content_middle'] = 'Content Center';
             <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
             ]]></search>
             <add position="replace" trim="true"><![CDATA[
-            <div class="product-menu-bottom fixed"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+            <div class="pull-right">
+                <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+            </div>
+            <div class="product-menu-bottom fixed">
             ]]></add>
         </operation>
         <operation>
