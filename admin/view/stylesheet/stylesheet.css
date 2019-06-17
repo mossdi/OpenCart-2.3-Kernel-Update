@@ -68,8 +68,8 @@ span.hidden-xs, span.hidden-sm, span.hidden-md, span.hidden-lg {
 }
 #header {
 	min-height: 0px;
-	background: #fff;
-	border-bottom: 1px solid #E5E5E5;
+	background: #eeeeee;
+	border-bottom: 1px solid #f9f9f9;
 	margin: 0;
 	padding: 0;
 }
