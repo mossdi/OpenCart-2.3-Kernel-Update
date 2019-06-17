@@ -679,6 +679,7 @@ class ControllerExtensionThemeDMProject extends Controller {
         //Product
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `thumb_height` SMALLINT UNSIGNED DEFAULT '0' NOT NULL AFTER `height`");
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `thumb_width` SMALLINT UNSIGNED DEFAULT '0' NOT NULL AFTER `height`");
+        $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `attribute_group_id` INT (11) UNSIGNED DEFAULT '0' NOT NULL AFTER `product_id`");
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `attribute_groups` SMALLINT (5) UNSIGNED DEFAULT '0' NOT NULL AFTER `product_id`");
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `attribute_display` SMALLINT (5) UNSIGNED DEFAULT '0' NOT NULL AFTER `product_id`");
         $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `variation` TINYINT (1) UNSIGNED DEFAULT '0' NOT NULL AFTER `product_id`");
