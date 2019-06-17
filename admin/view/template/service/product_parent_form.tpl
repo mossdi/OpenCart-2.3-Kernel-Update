@@ -120,6 +120,19 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-variations-display"><?php echo $entry_template_variations; ?></label>
+                                <div class="col-sm-10">
+                                    <select name="variations_display" id="input-variations-display" class="form-control">
+                                        <?php if ($variations_templates) { ?>
+                                        <?php foreach ($variations_templates as $template) { ?>
+                                        <option <?php echo $template['name'] == $variations_display ? 'selected' : false; ?> value="<?php echo $template['name']; ?>"><?php echo $template['name']; ?></option>
+                                        <?php } ?>
+                                        <?php } ?>
+                                        <option <?php  echo !$variations_display ? 'selected' : false; ?> value="0" ><?php echo $text_by_default; ?></option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane" id="tab-related">
                             <div class="form-group required">

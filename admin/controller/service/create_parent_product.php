@@ -86,6 +86,7 @@ class ControllerServiceCreateParentProduct extends Controller {
         $data['entry_parent'] = $this->language->get('entry_parent');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_template'] = $this->language->get('entry_template');
+        $data['entry_template_variations'] = $this->language->get('entry_template_variations');
         $data['entry_add_description'] = $this->language->get('entry_add_description');
         $data['entry_description'] = $this->language->get('entry_description');
         $data['entry_meta_title'] = $this->language->get('entry_meta_title');
@@ -101,6 +102,7 @@ class ControllerServiceCreateParentProduct extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
+        //Templates for product
         $product_templates = glob(DIR_CATALOG . 'view/theme/' . $this->config->get('config_theme') . '/template/custom/product/*.tpl');
 
         $data['product_templates'] = array();
@@ -108,6 +110,19 @@ class ControllerServiceCreateParentProduct extends Controller {
         if ($product_templates) {
             foreach ($product_templates as $template) {
                 $data['product_templates'][] = array(
+                    'name'  => basename($template)
+                );
+            }
+        }
+
+        //Templates for variants
+        $variations_templates = glob(DIR_CATALOG . 'view/theme/' . $this->config->get('config_theme') . '/template/custom/product/product_variants/*.tpl');
+
+        $data['variations_templates'] = array();
+
+        if ($variations_templates) {
+            foreach ($variations_templates as $template) {
+                $data['variations_templates'][] = array(
                     'name'  => basename($template)
                 );
             }
@@ -127,6 +142,12 @@ class ControllerServiceCreateParentProduct extends Controller {
 
                 $data['products_related'][] = $product;
             }
+        }
+
+        if (!empty($category_info)) {
+            $data['variations_display'] = $category_info['variations_display'];
+        } else {
+            $data['variations_display'] = false;
         }
 
         $data['stores'] = $this->model_setting_store->getStores();
