@@ -10,6 +10,7 @@
                     <li><a href="#tab-data" data-toggle="tab"><?php echo $tab_data; ?></a></li>
                     <li><a href="#tab-links" data-toggle="tab"><?php echo $tab_links; ?></a></li>
                     <li><a href="#tab-attribute" data-toggle="tab"><?php echo $tab_attribute; ?></a></li>
+                    <li><a href="#tab-image" data-toggle="tab"><?php echo $tab_image; ?></a></li>
                 </ul>
                 <form id="quick-product-form">
                     <div class="tab-content">
@@ -149,7 +150,7 @@
                                     <?php $attribute_row = 0; ?>
                                     <?php foreach ($product_attributes as $product_attribute) { ?>
                                     <tr id="attribute-row<?php echo $attribute_row; ?>">
-                                        <td class="text-left" style="width: 40%;"><input type="text" name="product_attribute[<?php echo $attribute_row; ?>][name]" value="<?php echo $product_attribute['name']; ?>" placeholder="<?php echo $entry_attribute; ?>" class="form-control" />
+                                        <td class="text-left" style="width: 40%;"><input <?php echo $attribute_group_id ? 'disabled' : '' ?> type="text" name="product_attribute[<?php echo $attribute_row; ?>][name]" value="<?php echo $product_attribute['name']; ?>" placeholder="<?php echo $entry_attribute; ?>" class="form-control" />
                                             <input type="hidden" name="product_attribute[<?php echo $attribute_row; ?>][attribute_id]" value="<?php echo $product_attribute['attribute_id']; ?>" /></td>
                                         <td class="text-left">
                                             <?php foreach ($languages as $language) { ?>
@@ -158,7 +159,7 @@
                                             </div>
                                             <?php } ?>
                                         </td>
-                                        <td class="text-left"><button type="button" onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                                        <td class="text-left"><button <?php echo $attribute_group_id ? 'disabled' : '' ?> type="button" onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
                                     </tr>
                                     <?php $attribute_row++; ?>
                                     <?php } ?>
@@ -166,20 +167,63 @@
                                     <tfoot>
                                     <tr>
                                         <td colspan="2">
-                                            <div class="col-sm-10">
-                                                <select name="attribute_group_id" id="input-attribute-group" class="form-control">
-                                                    <option value="0"></option>
-                                                    <?php foreach ($attribute_groups as $attribute_group) { ?>
-                                                    <?php if ($attribute_group['attribute_group_id'] == $attribute_group_id) { ?>
-                                                    <option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
-                                                    <?php } else { ?>
-                                                    <option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
-                                                    <?php } ?>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
+                                            <select name="attribute_group_id" id="input-attribute-group" class="form-control">
+                                                <option value="0"></option>
+                                                <?php foreach ($attribute_groups as $attribute_group) { ?>
+                                                <?php if ($attribute_group['attribute_group_id'] == $attribute_group_id) { ?>
+                                                <option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+                                                <?php } else { ?>
+                                                <option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+                                                <?php } ?>
+                                                <?php } ?>
+                                            </select>
                                         </td>
-                                        <td class="text-left"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="<?php echo $button_attribute_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                                        <td class="text-left"><button <?php echo $attribute_group_id ? 'disabled' : '' ?> id="attribute-add" type="button" onclick="addAttribute();" data-toggle="tooltip" title="<?php echo $button_attribute_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-image">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <td class="text-left"><?php echo $entry_image; ?></td>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-left"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a><input type="hidden" name="image" value="<?php echo $image; ?>" id="input-image" /></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="images" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <td class="text-left"><?php echo $entry_additional_image; ?></td>
+                                        <td class="text-right"><?php echo $entry_sort_order; ?></td>
+                                        <td></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $image_row = 0; ?>
+                                    <?php foreach ($product_images as $product_image) { ?>
+                                    <tr id="image-row<?php echo $image_row; ?>">
+                                        <td class="text-left"><a href="" id="thumb-image<?php echo $image_row; ?>" data-toggle="image" class="img-thumbnail"><img src="<?php echo $product_image['thumb']; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a><input type="hidden" name="product_image[<?php echo $image_row; ?>][image]" value="<?php echo $product_image['image']; ?>" id="input-image<?php echo $image_row; ?>" /></td>
+                                        <td class="text-right"><input type="text" name="product_image[<?php echo $image_row; ?>][sort_order]" value="<?php echo $product_image['sort_order']; ?>" placeholder="<?php echo $entry_sort_order; ?>" class="form-control" /></td>
+                                        <td class="text-left"><button type="button" onclick="$('#image-row<?php echo $image_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                                    </tr>
+                                    <?php $image_row++; ?>
+                                    <?php } ?>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td class="text-left"><button type="button" onclick="addImage();" data-toggle="tooltip" title="<?php echo $button_image_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -320,14 +364,47 @@
     var attribute_row = '<?php echo $attribute_row; ?>';
 
     $('select#input-attribute-group').change(function () {
-        let value = $(this).val();
+        attribute_row = 0;
 
-        if (value === 0) {
+        let attribute_group_id = $(this).val();
 
+        if (Number(attribute_group_id) === 0) {
+            $('#attribute tbody').empty();
+            $('button#attribute-add').removeAttr('disabled');
         } else {
+            $.ajax({
+                url: 'index.php?route=service/quick_edit_product/getAttributes&token=<?php echo $token; ?>',
+                method: 'post',
+                data: { attribute_group_id: attribute_group_id },
+                success: function (attributes) {
+                    $('#attribute tbody').empty();
+                    $('button#attribute-add').attr('disabled', 'disabled');
 
+                    addGroupAttribute(attributes);
+                }
+            });
         }
     });
+
+    function addGroupAttribute(attributes) {
+        attributes.forEach(function (item) {
+            html  = '<tr id="attribute-row' + attribute_row + '">';
+            html += '  <td class="text-left" style="width: 20%;"><input disabled type="text" name="product_attribute[' + attribute_row + '][name]" value="' + item.name + '" placeholder="<?php echo $entry_attribute; ?>" class="form-control" /><input type="hidden" name="product_attribute[' + attribute_row + '][attribute_id]" value="' + item.attribute_id + '" /></td>';
+            html += '  <td class="text-left">';
+            <?php foreach ($languages as $language) { ?>
+                html += '<div class="input-group"><span class="input-group-addon"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /></span><textarea name="product_attribute[' + attribute_row + '][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" placeholder="<?php echo $entry_text; ?>" class="form-control"></textarea></div>';
+            <?php } ?>
+            html += '  </td>';
+            html += '  <td class="text-left"><button type="button" disabled onclick="$(\'#attribute-row' + attribute_row + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+            html += '</tr>';
+
+            $('#attribute tbody').append(html);
+
+            attributeautocomplete(attribute_row);
+
+            attribute_row++;
+        });
+    }
 
     function addAttribute() {
         html  = '<tr id="attribute-row' + attribute_row + '">';
@@ -374,6 +451,21 @@
     $('#attribute tbody tr').each(function(index, element) {
         attributeautocomplete(index);
     });
+//--></script>
+<script type="text/javascript"><!--
+    let image_row = '<?php echo $image_row; ?>';
+
+    function addImage() {
+        html  = '<tr id="image-row' + image_row + '">';
+        html += '  <td class="text-left"><a href="" id="thumb-image' + image_row + '"data-toggle="image" class="img-thumbnail"><img src="<?php echo $placeholder; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a><input type="hidden" name="product_image[' + image_row + '][image]" value="" id="input-image' + image_row + '" /></td>';
+        html += '  <td class="text-right"><input type="text" name="product_image[' + image_row + '][sort_order]" value="" placeholder="<?php echo $entry_sort_order; ?>" class="form-control" /></td>';
+        html += '  <td class="text-left"><button type="button" onclick="$(\'#image-row' + image_row  + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+        html += '</tr>';
+
+        $('#images tbody').append(html);
+
+        image_row++;
+    }
 //--></script>
 <script type="text/javascript"><!--
     function getSeoUrlGenerator(seo_url_generator,autogenerator){

@@ -126,6 +126,7 @@ class ControllerServiceQuickEditProduct extends Controller {
         $data['tab_data'] = $this->language->get('tab_data');
         $data['tab_links'] = $this->language->get('tab_links');
         $data['tab_attribute'] = $this->language->get('tab_attribute');
+        $data['tab_image'] = $this->language->get('tab_image');
 
         $data['help_keyword'] = $this->language->get('help_keyword');
         $data['help_manufacturer'] = $this->language->get('help_manufacturer');
@@ -148,7 +149,12 @@ class ControllerServiceQuickEditProduct extends Controller {
         $data['entry_category'] = $this->language->get('entry_category');
         $data['entry_attribute'] = $this->language->get('entry_attribute');
         $data['entry_text'] = $this->language->get('entry_text');
+        $data['entry_image'] = $this->language->get('entry_image');
+        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        $data['entry_additional_image'] = $this->language->get('entry_additional_image');
 
+        $data['button_image_add'] = $this->language->get('button_image_add');
+        $data['button_remove'] = $this->language->get('button_remove');
         $data['button_remove'] = $this->language->get('button_remove');
         $data['button_attribute_add'] = $this->language->get('button_attribute_add');
 
@@ -163,10 +169,12 @@ class ControllerServiceQuickEditProduct extends Controller {
 
         $data['product_id'] = $product_id;
 
+        //Manufacturer
         $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
 
         $data['manufacturer'] = $manufacturer_info ? $manufacturer_info['name'] : null;
 
+        //Categories
         $data['main_category'] = array();
 
         $main_category_info = $this->model_catalog_category->getCategory($this->model_catalog_product->getProductMainCategoryId($product_id));
@@ -193,6 +201,7 @@ class ControllerServiceQuickEditProduct extends Controller {
             }
         }
 
+        //Attributes
         $this->load->model('catalog/attribute_group');
 
         $data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
@@ -213,10 +222,66 @@ class ControllerServiceQuickEditProduct extends Controller {
             }
         }
 
+        // Images
+        if (!empty($product_info)) {
+            $data['image'] = $product_info['image'];
+        } else {
+            $data['image'] = '';
+        }
+
+        $this->load->model('tool/image');
+
+        if (!empty($product_info) && is_file(DIR_IMAGE . $product_info['image'])) {
+            $data['thumb'] = $this->model_tool_image->resize($product_info['image'], 100, 100);
+        } else {
+            $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+        }
+
+        $data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+
+        $product_images = $this->model_catalog_product->getProductImages($this->request->get['product_id']);
+
+        $data['product_images'] = array();
+
+        foreach ($product_images as $product_image) {
+            if (is_file(DIR_IMAGE . $product_image['image'])) {
+                $image = $product_image['image'];
+                $thumb = $product_image['image'];
+            } else {
+                $image = '';
+                $thumb = 'no_image.png';
+            }
+
+            $data['product_images'][] = array(
+                'image'      => $image,
+                'thumb'      => $this->model_tool_image->resize($thumb, 100, 100),
+                'sort_order' => $product_image['sort_order']
+            );
+        }
         $data['token'] = $this->session->data['token'];
 
         $data['languages'] = $this->model_localisation_language->getLanguages();
 
         $this->response->setOutput($this->load->view('service/product_quick_edit_form', $data));
+    }
+
+    public function getAttributes() {
+        $this->load->model('catalog/attribute');
+
+        $results = $this->model_catalog_attribute->getAttributes([
+            'filter_attribute_group_id' => (int)$this->request->post['attribute_group_id'],
+        ]);
+
+        $attributes = array();
+
+        foreach ($results as $attribute) {
+            $attributes[] = [
+                'attribute_id'  => $attribute['attribute_id'],
+                'name'          => $attribute['name'],
+            ];
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($attributes));
     }
 }
