@@ -257,7 +257,7 @@ var cart = {
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {
-						$('#cart > button').html('<img src="/image/icons/cart-icon.png" alt="Cart"><span id="cart-total">' + json['total'] + '</span>');
+						$('#cart > button').html('<i class="fa fa-shopping-cart"></i> <span id="cart-total">' + json['total'] + '</span>');
 					}, 100);
 
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
@@ -283,7 +283,7 @@ var cart = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<img src="/image/icons/cart-icon.png" alt="Cart"><span id="cart-total">' + json['total'] + '</span>');
+					$('#cart > button').html('<i class="fa fa-shopping-cart"></i> <span id="cart-total">' + json['total'] + '</span>');
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -312,7 +312,7 @@ var cart = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<img src="/image/icons/cart-icon.png" alt="Cart"><span id="cart-total">' + json['total'] + '</span>');
+					$('#cart > button').html('<i class="fa fa-shopping-cart"></i> <span id="cart-total">' + json['total'] + '</span>');
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -347,7 +347,7 @@ var voucher = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<img src="/image/icons/cart-icon.png" class="cart-img" alt="Cart"><span id="cart-total">' + json['total'] + '</span>');
+					$('#cart > button').html('<i class="fa fa-shopping-cart"></i> <span id="cart-total">' + json['total'] + '</span>');
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
