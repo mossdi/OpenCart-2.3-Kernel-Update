@@ -165,7 +165,20 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td colspan="2"></td>
+                                        <td colspan="2">
+                                            <div class="col-sm-10">
+                                                <select name="attribute_group_id" id="input-attribute-group" class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach ($attribute_groups as $attribute_group) { ?>
+                                                    <?php if ($attribute_group['attribute_group_id'] == $attribute_group_id) { ?>
+                                                    <option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+                                                    <?php } else { ?>
+                                                    <option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+                                                    <?php } ?>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </td>
                                         <td class="text-left"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="<?php echo $button_attribute_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
                                     </tr>
                                     </tfoot>
@@ -305,6 +318,16 @@
 //--></script>
 <script type="text/javascript"><!--
     var attribute_row = '<?php echo $attribute_row; ?>';
+
+    $('select#input-attribute-group').change(function () {
+        let value = $(this).val();
+
+        if (value === 0) {
+
+        } else {
+
+        }
+    });
 
     function addAttribute() {
         html  = '<tr id="attribute-row' + attribute_row + '">';

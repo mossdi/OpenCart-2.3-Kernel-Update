@@ -3,12 +3,13 @@ class ModelServiceQuickEditProduct extends Model {
     public function editProduct($product_id, $data) {
         $this->db->query(
             "UPDATE " . DB_PREFIX . "product SET            
-            model           = '" . $this->db->escape($data['model']) . "',      
-            sku             = '" . $this->db->escape($data['sku']) . "',
-            manufacturer_id = '" . (int)$data['manufacturer_id'] . "',
-            status          = '" . (int)$data['status'] . "',
-            date_modified   = NOW()        
-            WHERE product_id = '" . (int)$product_id . "'"
+            model               = '" . $this->db->escape($data['model']) . "',      
+            sku                 = '" . $this->db->escape($data['sku']) . "',
+            manufacturer_id     = '" . (int)$data['manufacturer_id'] . "',
+            status              = '" . (int)$data['status'] . "',
+            attribute_group_id  = '" . (int)$data['attribute_group_id'] . "',
+            date_modified       = NOW()        
+            WHERE product_id    = '" . (int)$product_id . "'"
         );
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");

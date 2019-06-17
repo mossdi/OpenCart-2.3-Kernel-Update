@@ -159,6 +159,7 @@ class ControllerServiceQuickEditProduct extends Controller {
         $data['keyword'] = $product_info['keyword'];
         $data['status'] = $product_info['status'];
         $data['manufacturer_id'] = $product_info['manufacturer_id'];
+        $data['attribute_group_id'] = $product_info['attribute_group_id'];
 
         $data['product_id'] = $product_id;
 
@@ -191,6 +192,10 @@ class ControllerServiceQuickEditProduct extends Controller {
                 );
             }
         }
+
+        $this->load->model('catalog/attribute_group');
+
+        $data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
 
         $data['product_attributes'] = array();
 
