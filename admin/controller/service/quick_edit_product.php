@@ -20,6 +20,19 @@ class ControllerServiceQuickEditProduct extends Controller {
 
         parse_str(html_entity_decode($this->request->post['data']), $product_data);
 
+        if (!empty($product_data['images'])) {
+            foreach ($product_data['images'] as $key => $value) {
+                if ($key == $product_data['main-photo']) {
+                    $product_data['image'] = $value['image'];
+                } else {
+                    $product_data['product_image'][] = [
+                        'image'      => $value['image'],
+                        'sort_order' => 0,
+                    ];
+                }
+            }
+        }
+
         $json['warning'] = $this->validate($product_id, $product_data);
 
         if (!$json['warning']) {
@@ -155,7 +168,7 @@ class ControllerServiceQuickEditProduct extends Controller {
 
         $data['button_image_add'] = $this->language->get('button_image_add');
         $data['button_remove'] = $this->language->get('button_remove');
-        $data['button_remove'] = $this->language->get('button_remove');
+        $data['button_upload'] = $this->language->get('button_upload');
         $data['button_attribute_add'] = $this->language->get('button_attribute_add');
 
         $data['product_description'] = $this->model_catalog_product->getProductDescriptions($product_id);
@@ -262,7 +275,7 @@ class ControllerServiceQuickEditProduct extends Controller {
 
         $data['languages'] = $this->model_localisation_language->getLanguages();
 
-        $this->response->setOutput($this->load->view('service/product_quick_edit_form', $data));
+        $this->response->setOutput($this->load->view('service/quick_edit_product_form', $data));
     }
 
     public function getAttributes() {
@@ -283,5 +296,119 @@ class ControllerServiceQuickEditProduct extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($attributes));
+    }
+
+    public function imagesUpload() {
+        $this->load->model('service/quick_edit_product');
+        $this->load->language('common/filemanager');
+
+        $json   = array();
+        $images = array();
+
+        if ($this->request->server['HTTPS']) {
+            $server = HTTPS_CATALOG;
+        } else {
+            $server = HTTP_CATALOG;
+        }
+
+        $uploadTo = 'catalog/photo/products/';
+
+        $productManufacturer = mb_strtolower($this->request->post['product_manufacturer']);
+
+        if (!empty($productManufacturer) && stripos($productManufacturer, 'не выбрано') === false) {
+            $uploadTo .= $productManufacturer . '/';
+        } else {
+            $json['error'] = 'Please, set manufacturer';
+        };
+
+        $directory = DIR_IMAGE . '/' . $uploadTo;
+
+        if (!file_exists($directory) || file_exists($directory) && !is_dir($directory)) {
+            mkdir($directory, 0777);
+        }
+
+        if (!$json) {
+            // Check if multiple files are uploaded or just one
+            $files = array();
+
+            if (!empty($this->request->files['file']['name']) && is_array($this->request->files['file']['name'])) {
+                $i = 0;
+
+                foreach (array_keys($this->request->files['file']['name']) as $key) {
+                    $files[] = array(
+                        'name'     => $this->request->post['product_id'] . '_' . $productManufacturer . '_' . $i++ . utf8_strtolower(utf8_substr(strrchr($this->request->files['file']['name'][$key], '.'), 0)),
+                        'type'     => $this->request->files['file']['type'][$key],
+                        'tmp_name' => $this->request->files['file']['tmp_name'][$key],
+                        'error'    => $this->request->files['file']['error'][$key],
+                        'size'     => $this->request->files['file']['size'][$key]
+                    );
+                }
+            }
+
+            $i = 0;
+
+            foreach ($files as $file) {
+                if (is_file($file['tmp_name'])) {
+                    // Sanitize the filename
+                    $filename = basename(html_entity_decode($file['name'], ENT_QUOTES, 'UTF-8'));
+
+                    // Validate the filename length
+                    if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 255)) {
+                        $json['error'] = $this->language->get('error_filename');
+                    }
+
+                    // Allowed file extension types
+                    $allowed = array(
+                        'jpg',
+                        'jpeg',
+                        'gif',
+                        'png'
+                    );
+
+                    if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
+                        $json['error'] = $this->language->get('error_filetype');
+                    }
+
+                    // Allowed file mime types
+                    $allowed = array(
+                        'image/jpeg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'image/gif'
+                    );
+
+                    if (!in_array($file['type'], $allowed)) {
+                        $json['error'] = $this->language->get('error_filetype');
+                    }
+
+                    // Return any upload error
+                    if ($file['error'] != UPLOAD_ERR_OK) {
+                        $json['error'] = $this->language->get('error_upload_' . $file['error']);
+                    }
+                } else {
+                    $json['error'] = $this->language->get('error_upload');
+                }
+
+                if (!$json) {
+                    move_uploaded_file($file['tmp_name'], $directory . '/' . $filename);
+
+                    $images[$i] = [
+                        'path'      =>  $server . basename(DIR_IMAGE) . '/' . $uploadTo . $filename,
+                        'cut_path'  =>  $uploadTo . $filename,
+                    ];
+                }
+
+                $i++;
+            }
+        }
+
+        if (!$json) {
+            $json['success'] = true;
+            $json['images']  = $images;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 }
