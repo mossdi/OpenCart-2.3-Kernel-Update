@@ -172,6 +172,8 @@ $_['text_create_parent_product']  = 'Новая категория с товар
 $_['column_sku']             = 'Артикул';
 $_['column_seo_url']         = 'SEO-url';
 $_['column_variant']         = 'Вариация';
+$_['column_tag']             = 'Теги';
+$_['column_manufacturer']    = 'Производитель';
 
 $_['text_product_filter']    = 'Фильтр товаров';
 //mod
@@ -194,6 +196,8 @@ $_['text_create_parent_product']  = 'New category with products';
 $_['column_sku']             = 'Sku';
 $_['column_seo_url']         = 'SEO-url';
 $_['column_variant']         = 'Variation';
+$_['column_tag']             = 'Tags';
+$_['column_manufacturer']    = 'Manufacturer';
 
 $_['text_product_filter']    = 'Product\'s filter';
 //mod
@@ -1190,7 +1194,25 @@ $_['text_content_middle'] = 'Content Center';
         $data['column_sku'] = $this->language->get('column_sku');
         $data['column_seo_url'] = $this->language->get('column_seo_url');
         $data['column_variant'] = $this->language->get('column_variant');
+        $data['column_tag'] = $this->language->get('column_tag');
+        $data['column_manufacturer'] = $this->language->get('column_manufacturer');
         //mod
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+			$data['products'][] = array(
+            ]]></search>
+            <add position="before"><![CDATA[
+			$tags = array();
+
+			if ($result['tag']) {
+				$tags = explode(',', $result['tag']);
+			}
+
+			$this->load->model('catalog/manufacturer');
+
+			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($result['manufacturer_id']);
             ]]></add>
         </operation>
         <operation>
@@ -1198,8 +1220,10 @@ $_['text_content_middle'] = 'Content Center';
 		    'model'      => $result['model'],
             ]]></search>
             <add position="after"><![CDATA[
-				'sku'        => $result['sku'], //mod
-				'variation'  => $result['variation'], //mod
+				'sku'          => $result['sku'], //mod
+				'variation'    => $result['variation'], //mod
+				'manufacturer' => !empty($manufacturer_info)? $manufacturer_info['name'] : null, //mod
+				'tags'         => $tags, //mod
             ]]></add>
         </operation>
         <operation>
@@ -1943,6 +1967,8 @@ $_['text_content_middle'] = 'Content Center';
             <add position="before"><![CDATA[
                   <td class="text-left"><?php echo $column_sku; ?></td>
                   <td class="text-center"><?php echo $column_variant; ?></td>
+                  <td class="text-left"><?php echo $column_tag; ?></td>
+                  <td class="text-center"><?php echo $column_manufacturer; ?></td>
             ]]></add>
         </operation>
         <operation>
@@ -1954,6 +1980,28 @@ $_['text_content_middle'] = 'Content Center';
                   <td class="text-center">
                     <?php echo $product['variation'] ? '<i class="fa fa-check-square-o" aria-hidden="true"></i>' : ''; ?>
                   </td>
+                  <td>
+                    <?php if ($product['tags']) { ?>
+                    <p>
+                      <?php for ($i = 0; $i < count($product['tags']); $i++) { ?>
+                      <?php if ($i < (count($product['tags']) - 1)) { ?>
+                      <span><?php echo $product['tags'][$i]; ?></span>,
+                      <?php } else { ?>
+                      <span><?php echo $product['tags'][$i]; ?></span>
+                      <?php } ?>
+                      <?php } ?>
+                    </p>
+                    <?php } ?>
+                  </td>
+                  <td class="text-center"><?php echo $product['manufacturer']; ?></td>
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            <?php echo $category['name'];?><br>
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+                <a href="#" onclick="event.preventDefault(); quickEditParentProduct('<?php echo $category['category_id'] ?>', '<?php echo $token; ?>')"><?php echo $category['name'];?></a><br>
             ]]></add>
         </operation>
         <operation>
