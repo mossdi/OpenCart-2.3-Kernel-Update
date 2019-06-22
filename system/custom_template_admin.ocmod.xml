@@ -2006,18 +2006,6 @@ $_['text_content_middle'] = 'Content Center';
         </operation>
         <operation>
             <search><![CDATA[
-            <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
-            ]]></search>
-            <add position="replace"><![CDATA[
-                  <td class="text-right" nowrap>
-                    <a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary" onclick="event.preventDefault(); quickEditProduct('<?php echo $product['product_id']; ?>', '<?php echo $token; ?>')"><i class="fa fa-search" aria-hidden="true"></i></a>
-                    <a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
-                  </td>
-            ]]></add>
-        </operation>
-
-        <operation>
-            <search><![CDATA[
             <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
             ]]></search>
             <add position="replace" trim="true"><![CDATA[
