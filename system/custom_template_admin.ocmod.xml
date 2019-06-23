@@ -1979,7 +1979,7 @@ $_['text_content_middle'] = 'Content Center';
             <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
             ]]></search>
             <add position="before"><![CDATA[
-        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-success btn-create-parent" onclick="createParentProduct('<?php echo $token ?>'); "><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $text_create_parent_product ?></button>
+        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-success btn-create-parent" onclick="createParentProduct(); "><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $text_create_parent_product ?></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $enabled; ?>').submit()"><i class="fa fa-play"></i></button>
 		<button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $disabled; ?>').submit()"><i class="fa fa-pause"></i></button>
             ]]></add>

@@ -1,5 +1,5 @@
 <?php
-class ControllerServiceCreateParentProduct extends Controller {
+class ControllerServiceParentProduct extends Controller {
     public function index() {
         $this->load->language('catalog/category');
 
@@ -154,6 +154,6 @@ class ControllerServiceCreateParentProduct extends Controller {
 
         $data['category_store'] = array(0);
 
-        $this->response->setOutput($this->load->view('service/product_parent_form', $data));
+        $this->response->setOutput($this->load->view('service/parent_product', $data));
     }
 }
