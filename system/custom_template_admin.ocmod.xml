@@ -1294,6 +1294,19 @@ $_['text_content_middle'] = 'Content Center';
             ]]></add>
         </operation>
         <operation>
+            <search index="0"><![CDATA[
+		    $this->load->model('catalog/attribute');
+            ]]></search>
+            <add position="replace">
+        $this->load->model('catalog/attribute');
+        $this->load->model('catalog/attribute_group');
+
+        $data['attribute_groups']   = $this->model_catalog_attribute_group->getAttributeGroups(); //mod
+        $data['attribute_group_id'] = $product_info['attribute_group_id']; //mod
+
+            </add>
+        </operation>
+        <operation>
             <search><![CDATA[
 			'price'             => $product_special['price'],
             ]]></search>
@@ -1724,6 +1737,39 @@ $_['text_content_middle'] = 'Content Center';
         </operation>
     </file>
 
+    <!-- 9. ATTRIBUTE CONTROLLER (Admin-panel) -->
+
+    <file path="admin/controller/catalog/attribute.php">
+        <operation>
+            <search><![CDATA[
+            public function autocomplete() {
+            ]]></search>
+            <add position="before"><![CDATA[
+    //mod
+    public function getGroupAttributes() {
+        $this->load->model('catalog/attribute');
+
+        $results = $this->model_catalog_attribute->getAttributes([
+            'filter_attribute_group_id' => (int)$this->request->post['attribute_group_id'],
+        ]);
+
+        $attributes = array();
+
+        foreach ($results as $attribute) {
+            $attributes[] = [
+                'attribute_id'  => $attribute['attribute_id'],
+                'name'          => $attribute['name'],
+            ];
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($attributes));
+    }
+    //mod
+            ]]></add>
+        </operation>
+    </file>
+
     <!-- *** //END CONTROLLER (Admin-panel)// *** -->
 
 
@@ -2091,6 +2137,27 @@ $('#form-product input[type=\'checkbox\']').change(function () {
         </operation>
         <operation>
             <search><![CDATA[
+            <td class="text-left"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="<?php echo $button_attribute_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+            ]]></search>
+            <add position="replace" offset="-1"><![CDATA[
+                      <td colspan="2">
+                          <select name="attribute_group_id" id="input-attribute-group" class="form-control">
+                              <option value="0"></option>
+                              <?php foreach ($attribute_groups as $attribute_group) { ?>
+                              <?php if ($attribute_group['attribute_group_id'] == $attribute_group_id) { ?>
+                              <option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+                              <?php } else { ?>
+                              <option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+                              <?php } ?>
+                              <?php } ?>
+                          </select>
+                      </td>
+                      <td class="text-left"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="<?php echo $button_attribute_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
             <td class="text-left"><button type="button" onclick="$('#special-row<?php echo $special_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
             ]]></search>
             <add position="before"><![CDATA[
@@ -2152,6 +2219,57 @@ $('input[name=\'main_category\']').autocomplete({
 $('#product-main-category').delegate('.fa-minus-circle', 'click', function() {
     $(this).parent().remove();
 });
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            var attribute_row = <?php echo $attribute_row; ?>;
+            ]]></search>
+            <add position="replace"><![CDATA[
+let attribute_row = '<?php echo $attribute_row; ?>';
+
+$('select#input-attribute-group').change(function () {
+    attribute_row = 0;
+
+    let attribute_group_id = $(this).val();
+
+    if (Number(attribute_group_id) === 0) {
+        $('#attribute tbody').empty();
+        $('button#attribute-add').removeAttr('disabled');
+    } else {
+        $.ajax({
+            url: 'index.php?route=catalog/attribute/getGroupAttributes&token=' + getURLVar('token'),
+            method: 'post',
+            data: { attribute_group_id: attribute_group_id },
+            success: function (attributes) {
+                $('#attribute tbody').empty();
+                $('button#attribute-add').attr('disabled', 'disabled');
+
+                addGroupAttributes(attributes);
+            }
+        });
+    }
+});
+
+function addGroupAttributes(attributes) {
+    attributes.forEach(function (item) {
+        html  = '<tr id="attribute-row' + attribute_row + '">';
+        html += '  <td class="text-left" style="width: 20%;"><input disabled type="text" name="product_attribute[' + attribute_row + '][name]" value="' + item.name + '" placeholder="<?php echo $entry_attribute; ?>" class="form-control" /><input type="hidden" name="product_attribute[' + attribute_row + '][attribute_id]" value="' + item.attribute_id + '" /></td>';
+        html += '  <td class="text-left">';
+        '<?php foreach ($languages as $language) { ?>'
+        html += '<div class="input-group"><span class="input-group-addon"><img src="language/<?php echo $language['code']; ?>/<?php echo $language['code']; ?>.png" title="<?php echo $language['name']; ?>" /></span><textarea name="product_attribute[' + attribute_row + '][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" placeholder="<?php echo $entry_text; ?>" class="form-control"></textarea></div>';
+        '<?php } ?>'
+        html += '  </td>';
+        html += '  <td class="text-left"><button type="button" disabled onclick="$(\'#attribute-row' + attribute_row + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+        html += '</tr>';
+
+        $('#attribute tbody').append(html);
+
+        attributeautocomplete(attribute_row);
+
+        attribute_row++;
+    });
+}
             ]]></add>
         </operation>
     </file>
