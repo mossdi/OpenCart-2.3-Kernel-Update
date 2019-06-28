@@ -4,6 +4,7 @@ class ControllerServiceParentProduct extends Controller {
         $this->load->language('catalog/category');
 
         $this->load->model('catalog/product');
+        $this->load->model('catalog/attribute');
         $this->load->model('setting/store');
         $this->load->model('catalog/manufacturer');
         $this->load->model('localisation/language');
@@ -11,7 +12,7 @@ class ControllerServiceParentProduct extends Controller {
         $this->getForm();
     }
 
-    public function create() {
+    public function save() {
         $category_data = array();
 
         parse_str(html_entity_decode($this->request->post['data']), $category_data);
@@ -87,6 +88,7 @@ class ControllerServiceParentProduct extends Controller {
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_template'] = $this->language->get('entry_template');
         $data['entry_template_variations'] = $this->language->get('entry_template_variations');
+        $data['entry_attribute_groups'] = $this->language->get('entry_attribute_groups');
         $data['entry_add_description'] = $this->language->get('entry_add_description');
         $data['entry_description'] = $this->language->get('entry_description');
         $data['entry_meta_title'] = $this->language->get('entry_meta_title');
@@ -149,6 +151,16 @@ class ControllerServiceParentProduct extends Controller {
         } else {
             $data['variations_display'] = false;
         }
+
+        if (!empty($category_info)) {
+            $data['attribute_groups'] = $category_info['attribute_groups'];
+        } else {
+            $data['attribute_groups'] = false;
+        }
+
+
+
+        $data['attributes'] = $this->model_catalog_attribute->getAttributes();
 
         $data['stores'] = $this->model_setting_store->getStores();
 

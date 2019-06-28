@@ -1216,7 +1216,7 @@ $_['text_content_middle'] = 'Content Center';
             ]]></add>
         </operation>
         <operation>
-            <search><![CDATA[
+            <search index="0"><![CDATA[
 		    'model'      => $result['model'],
             ]]></search>
             <add position="after"><![CDATA[
@@ -1302,8 +1302,14 @@ $_['text_content_middle'] = 'Content Center';
         $this->load->model('catalog/attribute_group');
 
         $data['attribute_groups']   = $this->model_catalog_attribute_group->getAttributeGroups(); //mod
-        $data['attribute_group_id'] = $product_info['attribute_group_id']; //mod
 
+        if (isset($this->request->post['attribute_group_id'])) {
+            $data['attribute_group_id'] = $this->request->post['attribute_group_id'];
+        } elseif (!empty($product_info)) {
+            $data['attribute_group_id'] = $product_info['attribute_group_id'];
+        } else {
+            $data['attribute_group_id'] = 0;
+        }
             </add>
         </operation>
         <operation>

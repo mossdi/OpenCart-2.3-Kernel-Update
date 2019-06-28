@@ -1,4 +1,4 @@
-<div id="popup-create-parent-product">
+<div id="popup-parent-product-form">
     <fieldset class="form-horizontal">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -133,6 +133,19 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-attribute-groups"><?php echo $entry_attribute_groups; ?></label>
+                                <div class="col-sm-10">
+                                    <select name="attribute_groups" id="input-attribute-groups" class="form-control">
+                                        <?php if ($attributes) { ?>
+                                        <?php foreach ($attributes as $attribute) { ?>
+                                        <option <?php echo $attribute['attribute_id'] == $attribute_groups ? 'selected' : false; ?> value="<?php echo $attribute['attribute_id']; ?>"><?php echo $attribute['name']; ?> (<?php echo $attribute['attribute_group']; ?>)</option>
+                                        <?php } ?>
+                                        <?php } ?>
+                                        <option <?php  echo !$attribute_groups ? 'selected' : false; ?> value="0"><?php echo $text_disabled; ?></option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane" id="tab-related">
                             <div class="form-group required">
@@ -160,16 +173,20 @@
         </div>
     </fieldset>
 </div>
+
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+
 <script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
 <script type="text/javascript" src="view/javascript/summernote/lang/summernote-ru-RU.js"></script>
-<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
 <script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+
 <script type="text/javascript"><!--
     $('#language a:first').tab('show');
 
-    $('#popup-create-parent-product').on('click', '#btn-save', function () {
+    //Save
+    $('#popup-parent-product-form').on('click', '#btn-save', function () {
         $.ajax({
-            url: 'index.php?route=service/create_parent_product/create&token=<?php echo $token ?>',
+            url: 'index.php?route=service/parent_product/save&token=' + getURLVar('token'),
             type: 'POST',
             data: { 'data': $('#parent-product-form').serialize() },
             dataType: 'json',
@@ -187,10 +204,11 @@
         });
     });
 
+    //Path
     $('input[name=\'path\']').autocomplete({
         'source': function(request, response) {
             $.ajax({
-                url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+                url: 'index.php?route=catalog/category/autocomplete&token=' + getURLVar('token') + '&filter_name=' +  encodeURIComponent(request),
                 dataType: 'json',
                 success: function(json) {
                     json.unshift({
@@ -213,6 +231,7 @@
         }
     });
 
+    //Related product
     $('input[name=\'related\']').autocomplete({
         'source': function(request, response) {
             $.ajax({
@@ -240,8 +259,8 @@
     $('#product-related').delegate('.fa-minus-circle', 'click', function() {
         $(this).parent().remove();
     });
-//--></script>
-<script type="text/javascript"><!--
+
+    //SEO-Url generator
     function getSeoUrlGenerator(seo_url_generator, autogenerator) {
         $.ajax({
             url: 'index.php?route=extension/module/seourlgenerator/seourlgenerateajax&token=<?php echo $token; ?>',

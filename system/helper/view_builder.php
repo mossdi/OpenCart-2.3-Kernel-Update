@@ -76,9 +76,11 @@ function getProductsAnyTypeView($object, $products_type = '', $products_any_type
 
                         $attribute = $object->model_catalog_product->getProductAttributeValue($filter_attribute_groups);
 
-                        $attribute_group = $attribute['text'] ? mb_strtolower($attribute['text']) : 'empty';
+                        if ($attribute) {
+                            $attribute_group = $attribute['text'] ? mb_strtolower($attribute['text']) : 'empty';
 
-                        $product_variants['groups'][$attribute_group][] = $product_variant;
+                            $product_variants['groups'][$attribute_group][] = $product_variant;
+                        }
                     } else {
                         $product_variants[] = $product_variant;
                     }
@@ -366,12 +368,15 @@ function getProductVariantsView($object, $product_id, $product_variants, $catego
 
             $attribute = $object->model_catalog_product->getProductAttributeValue($filter_attribute);
 
-            $attribute_group =  $attribute['text'] ? $attribute['name'] . ' - ' . $attribute['text'] : '<span style="color:red;">value is undefined</span>';
-              if ($attribute['text'] && strrchr($attribute['name'], ',')) {
-                  $attribute_group .= substr(strrchr($attribute['name'], ','), 1);
-              }
+            if ($attribute) {
+                $attribute_group = $attribute['text'] ? $attribute['name'] . ' - ' . $attribute['text'] : '<span style="color:red;">value is undefined</span>';
 
-            $data['product_variants']['groups'][$attribute_group][] = $variant;
+                if ($attribute['text'] && strrchr($attribute['name'], ',')) {
+                    $attribute_group .= substr(strrchr($attribute['name'], ','), 1);
+                }
+
+                $data['product_variants']['groups'][$attribute_group][] = $variant;
+            }
         } else {
             $data['product_variants'][] = $variant;
         }
