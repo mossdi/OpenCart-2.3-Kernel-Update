@@ -32,6 +32,8 @@ $_['text_contacts']             = 'Контакты';
 
 $_['entry_in_stock']            = 'только в наличии';
 
+$_['button_instock']            = 'В наличии';
+$_['button_all']                = 'Все';
 $_['button_pre_order']          = 'Под заказ';
 $_['button_no_stock']           = 'Нет в наличии';
 $_['button_payment']            = 'Оплатить заказ';
@@ -587,7 +589,7 @@ $_['text_service']      = 'Help';
 
                 $results_total = $this->model_catalog_parent_product->getTotalProductsAnyType($filter_data);
 
-                $data['products_any_type'] = getProductsAnyTypeView(
+                $data['products_any_type'] = productListView(
                     $this,
                     $products_type = 'products_category',
                     $results,
@@ -1046,7 +1048,7 @@ $_['text_service']      = 'Help';
                     }
                 }
 
-                $data['product_variants'] = getProductVariantsView(
+                $data['product_variants'] = productVariantsView(
                     $this,
                     $product_id,
                     $results,
@@ -1368,7 +1370,7 @@ $_['text_service']      = 'Help';
 
                         $results = $this->model_catalog_parent_product->getProductsAnyType($filter_data);
 
-                        $products_any_type = getProductsAnyTypeView(
+                        $products_any_type = productListView(
                             $this,
                             $products_type = 'products_manufacturer',
                             $results,
@@ -1720,7 +1722,7 @@ $_['text_service']      = 'Help';
 
         $results_total = $this->model_catalog_parent_product->getTotalSpecialProductsAnyType($filter_data);
 
-        $data['special_products'] = getProductsAnyTypeView(
+        $data['special_products'] = productListView(
             $this,
             $products_type = 'products_special',
             $results,

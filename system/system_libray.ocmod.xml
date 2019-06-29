@@ -83,5 +83,109 @@
         </operation>
     </file>
 
+    <!-- SYSTEM - Library - Cache -->
+
+    <file path="system/library/cache/file.php">
+        <operation>
+            <search><![CDATA[
+            public function get($key) {
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            public function get($key, $path = null) {
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            public function delete($key) {
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            public function delete($key, $path = null) {
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+	        public function set($key, $value) {
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+	        public function set($key, $value, $path = null) {
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+		    $file = DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $this->expire);
+            ]]></search>
+            <add position="replace"><![CDATA[
+        if ($path) {
+		    $file = DIR_CACHE . $path . '/cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $this->expire);
+		} else {
+		    $file = DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $this->expire);
+		}
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+		$files = glob(DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+            ]]></search>
+            <add position="replace"><![CDATA[
+        if ($path) {
+		    $files = glob(DIR_CACHE . $path . '/cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+		} else {
+		    $files = glob(DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+		}
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="system/library/cache.php">
+        <operation>
+            <search><![CDATA[
+            public function get($key) {
+            ]]></search>
+            <add position="replace" trim="true">
+            public function get($key, $path = null) {
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            return $this->adaptor->get($key);
+            ]]></search>
+            <add position="replace" trim="true">
+            return $this->adaptor->get($key, $path);
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            public function set($key, $value) {
+            ]]></search>
+            <add position="replace" trim="true">
+            public function set($key, $value, $path = null) {
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            return $this->adaptor->set($key, $value);
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            return $this->adaptor->set($key, $value, $path);
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            public function delete($key) {
+            ]]></search>
+            <add position="replace" trim="true"><![CDATA[
+            public function delete($key, $path = null) {
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            return $this->adaptor->delete($key);
+            ]]></search>
+            <add position="reolace" trim="true"><![CDATA[
+            return $this->adaptor->delete($key, $path);
+            ]]></add>
+        </operation>
+    </file>
+
     <!-- ======================================= //END SYSTEM// ======================================= -->
 </modification>

@@ -68,7 +68,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
                 }
             }
 
-            $data['featured_products'] = getProductsAnyTypeView(
+            $data['featured_products'] = productListView(
                 $this,
                 $products_type = 'products',
                 $featured_products,
@@ -97,7 +97,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
 
             $special_products = $this->model_catalog_parent_product->getSpecialProductsAnyType($special_filter);
 
-            $data['special_products'] = getProductsAnyTypeView(
+            $data['special_products'] = productListView(
                 $this,
                 $products_type = 'products_special',
                 $special_products,
@@ -126,7 +126,7 @@ class ControllerExtensionModuleModulesTab extends Controller {
 
             $latest_products = $this->model_catalog_parent_product->getLatestProductsAnyType($latest_filter);
 
-            $data['latest_products'] = getProductsAnyTypeView(
+            $data['latest_products'] = productListView(
                 $this,
                 $products_type = 'products',
                 $latest_products,
