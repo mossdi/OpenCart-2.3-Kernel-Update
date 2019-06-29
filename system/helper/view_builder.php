@@ -15,8 +15,8 @@ function productListView($object, $products_type = '', $products_any_type, $cate
 
         if ($product_any_type['parent_product']) {
             //Cache
-            $product_variants = $object->cache->get('product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'products_preview');
-            $product_preview  = $object->cache->get('product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'products_preview');
+            $product_variants = $object->cache->get('parent_product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'parent_products_preview');
+            $product_preview  = $object->cache->get('parent_product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'parent_products_preview');
 
             if (!$product_variants || !$product_preview) {
                 $filter_data = array(
@@ -40,7 +40,7 @@ function productListView($object, $products_type = '', $products_any_type, $cate
                     $product_variants = getProductVariants($object, $variants, $product_any_type);
 
                     //Cache set - productVariants
-                    $object->cache->set('product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_variants, 'products_preview');
+                    $object->cache->set('parent_product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_variants, 'parent_products_preview');
 
                     if (!empty($product_variants['groups'])) {
                         ksort($product_variants['groups']);
@@ -57,7 +57,7 @@ function productListView($object, $products_type = '', $products_any_type, $cate
                         $product_preview = getProductPreview($object, $product_preview_info, $product_any_type);
 
                         //Cache set - productPreview
-                        $object->cache->set('product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_preview, 'products_preview');
+                        $object->cache->set('parent_product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_preview, 'parent_products_preview');
                     }
                 }
             }
