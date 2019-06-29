@@ -1216,7 +1216,7 @@ $_['text_content_middle'] = 'Content Center';
             ]]></add>
         </operation>
         <operation>
-            <search><![CDATA[
+            <search index="0"><![CDATA[
 		    'model'      => $result['model'],
             ]]></search>
             <add position="after"><![CDATA[
@@ -1302,8 +1302,14 @@ $_['text_content_middle'] = 'Content Center';
         $this->load->model('catalog/attribute_group');
 
         $data['attribute_groups']   = $this->model_catalog_attribute_group->getAttributeGroups(); //mod
-        $data['attribute_group_id'] = $product_info['attribute_group_id']; //mod
 
+        if (isset($this->request->post['attribute_group_id'])) {
+            $data['attribute_group_id'] = $this->request->post['attribute_group_id'];
+        } elseif (!empty($product_info)) {
+            $data['attribute_group_id'] = $product_info['attribute_group_id'];
+        } else {
+            $data['attribute_group_id'] = 0;
+        }
             </add>
         </operation>
         <operation>
@@ -1979,7 +1985,7 @@ $_['text_content_middle'] = 'Content Center';
             <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
             ]]></search>
             <add position="before"><![CDATA[
-        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-success btn-create-parent" onclick="createParentProduct('<?php echo $token ?>'); "><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $text_create_parent_product ?></button>
+        <button type="button" data-toggle="tooltip" title="<?php echo $text_create_parent_product; ?>" class="btn btn-success btn-create-parent" onclick="createParentProduct(); "><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $text_create_parent_product ?></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $enabled; ?>').submit()"><i class="fa fa-play"></i></button>
 		<button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $disabled; ?>').submit()"><i class="fa fa-pause"></i></button>
             ]]></add>
