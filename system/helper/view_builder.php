@@ -250,7 +250,7 @@ function getProductPreview($object, $product_info, $product_any_type) {
     }
 
     return array(
-        'name'            => $product_info['name'],
+        'name'            => $product_any_type['name'],
         'product_id'      => $product_info['product_id'],
         'stock_qty'       => $product_info['quantity'],
         'stock'           => $stock,
