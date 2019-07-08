@@ -15,10 +15,10 @@ function productListView($object, $products_type = '', $products_any_type, $cate
 
         if ($product_any_type['parent_product']) {
             //Cache
-            $product_variants = $object->cache->get('parent_product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'parent_products_preview');
-            $product_preview  = $object->cache->get('parent_product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'parent_products_preview');
+            //$product_variants = $object->cache->get('parent_product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'parent_products_preview');
+            //$product_preview  = $object->cache->get('parent_product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), 'parent_products_preview');
 
-            if (!$product_variants || !$product_preview) {
+            if (true || !$product_variants || !$product_preview) {
                 $filter_data = array(
                     'filter_category_id'  => $product_any_type['id'],
                     'filter_in_stock'     => $in_stock,
@@ -40,7 +40,7 @@ function productListView($object, $products_type = '', $products_any_type, $cate
                     $product_variants = getProductVariants($object, $variants, $product_any_type);
 
                     //Cache set - productVariants
-                    $object->cache->set('parent_product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_variants, 'parent_products_preview');
+                    //$object->cache->set('parent_product.' . $product_any_type['id'] .  '.variants.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_variants, 'parent_products_preview');
 
                     if (!empty($product_variants['groups'])) {
                         ksort($product_variants['groups']);
@@ -57,7 +57,7 @@ function productListView($object, $products_type = '', $products_any_type, $cate
                         $product_preview = getProductPreview($object, $product_preview_info, $product_any_type);
 
                         //Cache set - productPreview
-                        $object->cache->set('parent_product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_preview, 'parent_products_preview');
+                        //$object->cache->set('parent_product.' . $product_any_type['id'] .  '.preview.' . (int)$object->config->get('config_language_id') . '.' . (int)$object->config->get('config_store_id') . '.' . $object->config->get('config_customer_group_id'), $product_preview, 'parent_products_preview');
                     }
                 }
             }
@@ -142,6 +142,7 @@ function productVariantsView($object, $product_id, $product_variants, $category_
             'stock_qty'           => $product_variant['quantity'],
             'stock_id'            => $product_variant['quantity'] <= 0 ? 'nostock' : 'instock',
             'special_percent'     => $special_percent,
+            'attribute_groups'    => $object->model_catalog_product->getProductAttributes($product_variant['product_id']),
             'attribute'           => $attribute_display ? $attribute_display['text'] : false
         );
 
