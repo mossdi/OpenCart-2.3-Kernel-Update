@@ -155,9 +155,9 @@ function productVariantsView($object, $product_id, $product_variants, $category_
             $attribute = $object->model_catalog_product->getProductAttributeValue($filter_attribute);
 
             $attribute_group =  $attribute['text'] ? $attribute['name'] . ' - ' . $attribute['text'] : '<span style="color:red;">value is undefined</span>';
-              if ($attribute['text'] && strrchr($attribute['name'], ',')) {
-                  $attribute_group .= substr(strrchr($attribute['name'], ','), 1);
-              }
+            //if ($attribute['text'] && strrchr($attribute['name'], ',')) {
+            //    $attribute_group .= substr(strrchr($attribute['name'], ','), 1);
+            //}
 
             $data['product_variants']['groups'][$attribute_group][] = $variant;
         } else {

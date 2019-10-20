@@ -28,7 +28,7 @@
                                             <input type="text" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo $category_name_example; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name<?php echo $language['language_id']; ?>" class="form-control" />
                                         </div>
                                     </div>
-                                    <div style="display: none;" class="form-group">
+                                    <div class="form-group">
                                         <label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>
                                         <div class="col-sm-10">
                                             <textarea name="category_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" class="form-control summernote"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['description'] : ''; ?></textarea>
