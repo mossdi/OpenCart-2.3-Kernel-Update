@@ -315,7 +315,7 @@ function getProductVariants($object, $variants, $product_any_type) {
 
             $attribute = $object->model_catalog_product->getProductAttributeValue($filter_attribute_groups);
 
-            $attribute_group = $attribute['text'] ? mb_strtolower($attribute['text']) : 'empty';
+            $attribute_group = !empty($attribute['text']) ? mb_strtolower($attribute['text']) : 'empty';
 
             $product_variants['groups'][$attribute_group][] = $product_variant;
         } else {

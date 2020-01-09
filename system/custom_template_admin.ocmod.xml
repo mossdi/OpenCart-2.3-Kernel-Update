@@ -1776,6 +1776,21 @@ $_['text_content_middle'] = 'Content Center';
         </operation>
     </file>
 
+    <!-- 10. FILE-MANAGER CONTROLLER (Admin-panel) -->
+
+    <file path="admin/controller/common/filemanager.php">
+        <operation>
+            <search><![CDATA[
+            $json['success'] = $this->language->get('text_uploaded');
+            ]]></search>
+            <add position="after"><![CDATA[
+            if (!empty($files) && count($files) < 2) {
+			    $json['file_name'] = basename($filename, utf8_substr(strrchr($filename, '.'), 0));
+            }
+            ]]></add>
+        </operation>
+    </file>
+
     <!-- *** //END CONTROLLER (Admin-panel)// *** -->
 
 
@@ -2545,6 +2560,25 @@ $('#module-column-left, #module-column-right, #module-content-top, #module-conte
             ]]></search>
             <add position="replace" trim="true"><![CDATA[
 $('#module-column-left, #module-column-right, #module-content-top, #module-content-bottom, #module-content-middle').trigger('change');
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- 6. FILE-MANAGER TEMPLATE (Admin-panel) -->
+
+    <file path="admin/view/template/common/filemanager.tpl">
+        <operation>
+            <search index="0"><![CDATA[
+            alert(json['success']);
+            ]]></search>
+            <add position="replace" offset="2"><![CDATA[
+						if (json['file_name'] !== undefined) {
+                            $('input[name=\'search\']').val(json['file_name']);
+                            $('#button-search').trigger('click');
+                        } else {
+                            alert(json['success']);
+                            $('#button-refresh').trigger('click');
+                        }
             ]]></add>
         </operation>
     </file>

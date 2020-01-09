@@ -364,7 +364,7 @@ class ControllerServiceProductChange extends Controller {
 
             $category_id_info = $this->model_catalog_parent_product->getParentCategoryId($product_id);
 
-            if ((int)$this->request->post['current_category_id'] != (int)$category_id_info['category_id']) {
+            if (true || (int)$this->request->post['current_category_id'] != (int)$category_id_info['category_id']) {
                 $this->load->model('catalog/category');
 
                 $category_info = $this->model_catalog_category->getCategory((int)$category_id_info['category_id']);
@@ -372,6 +372,10 @@ class ControllerServiceProductChange extends Controller {
                 $json['category_name'] = $category_info['name'];
                 $json['category_id'] = $category_info['category_id'];
                 $json['category_href'] = $this->url->link('product/category&path=' . $category_id_info['category_id']);
+
+                if (!empty($category_info['description'])) {
+                    $nav_tabs['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+                }
             } else {
                 $json['category_name'] = false;
             }

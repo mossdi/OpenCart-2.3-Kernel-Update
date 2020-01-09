@@ -29,6 +29,8 @@ $_['text_special_logged']       = 'Скидка для зарегистриро�
 $_['text_open_map']             = 'Открыть карту';
 $_['text_close_map']            = 'Закрыть карту';
 $_['text_contacts']             = 'Контакты';
+$_['text_for_customer']         = 'Покупателю';
+$_['text_about_us']             = 'О нас';
 
 $_['entry_in_stock']            = 'только в наличии';
 
@@ -61,6 +63,8 @@ $_['text_special_logged']       = 'Discount for registered users: <span>%s</span
 $_['text_open_map']             = 'Open a map';
 $_['text_close_map']            = 'Close a map';
 $_['text_contacts']             = 'Contacts';
+$_['text_for_customer']         = 'For a customer';
+$_['text_about_us']             = 'About us';
 
 $_['entry_in_stock']            = 'in stock';
 
@@ -2156,9 +2160,37 @@ $_['text_service']      = 'Help';
         </operation>
         <operation>
             <search><![CDATA[
+            $data['text_all'] = $this->language->get('text_all');
+            ]]></search>
+            <add position="replace">
+        $data['text_all'] = $this->language->get('text_all');
+        $data['text_manufacturer'] = $this->language->get('text_manufacturer');
+        $data['text_return'] = $this->language->get('text_return');
+        $data['text_special'] = $this->language->get('text_special');
+        $data['text_contact'] = $this->language->get('text_contact');
+        $data['text_for_customer'] = $this->language->get('text_for_customer');
+        $data['text_about_us'] = $this->language->get('text_about_us');
+
+        $data['button_back'] = $this->language->get('button_back');
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+            $data['contact'] = $this->url->link('information/contact');
+            ]]></search>
+            <add position="replace"><![CDATA[
+        $data['contact'] = $this->url->link('information/contact');
+        $data['manufacturer'] = $this->url->link('product/manufacturer');
+        $data['special'] = $this->url->link('product/special');
+        $data['return'] = $this->url->link('account/return/add', '', true);
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
 		    $data['telephone'] = $this->config->get('config_telephone');
             ]]></search>
-            <add position="after"><![CDATA[
+            <add position="replace"><![CDATA[
+        $data['telephone'] = $this->config->get('config_telephone');
 		$data['email'] = $this->config->get('config_email');
         $data['open'] = $this->config->get('config_open');
             ]]></add>
@@ -2361,6 +2393,20 @@ $_['text_service']      = 'Help';
             ]]></search>
             <add position="after"><![CDATA[
         $data['content_middle'] = $this->load->controller('common/content_middle'); //mod
+            ]]></add>
+        </operation>
+    </file>
+
+    <!-- 10. CART CONTROLLER (Frontend) -->
+
+    <file path="catalog/controller/common/cart.php">
+        <operation>
+            <search><![CDATA[
+            $data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->session->data['currency']));
+            ]]></search>
+            <add position="replace"><![CDATA[
+        $data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->session->data['currency']));
+        $data['count_products'] = $this->cart->countProducts();
             ]]></add>
         </operation>
     </file>
